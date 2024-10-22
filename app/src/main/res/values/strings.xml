@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="get_started_button_text">Get Started</string>
 </resources>
