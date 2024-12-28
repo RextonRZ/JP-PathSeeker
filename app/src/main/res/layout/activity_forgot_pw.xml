@@ -124,7 +124,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="110dp" />
+                android:layout_height="118dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,8 +135,7 @@
                 <ImageView
                     android:id="@+id/logoicon"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:srcCompat="@drawable/logoicon" />
+                    android:layout_height="50dp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
