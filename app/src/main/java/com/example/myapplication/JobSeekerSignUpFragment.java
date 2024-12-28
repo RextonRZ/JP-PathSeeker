@@ -1,14 +1,18 @@
 package com.example.myapplication;
 
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class JobSeekerSignUpFragment extends Fragment {
@@ -87,6 +91,28 @@ public class JobSeekerSignUpFragment extends Fragment {
                 // No action required
             }
         });
+
+        TextView signin = view.findViewById(R.id.signin);
+
+        signin.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: // Finger or mouse down
+                case MotionEvent.ACTION_HOVER_ENTER: // Mouse enters
+                    signin.setPaintFlags(signin.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    break;
+
+                case MotionEvent.ACTION_UP: // Finger or mouse up
+                case MotionEvent.ACTION_HOVER_EXIT: // Mouse exits
+                    signin.setPaintFlags(signin.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+
+                    // Use requireContext() to start the activity
+                    Intent intent = new Intent(requireContext(), Login.class);
+                    startActivity(intent);
+                    break;
+            }
+            return true;
+        });
+
         return view;
     }
 }

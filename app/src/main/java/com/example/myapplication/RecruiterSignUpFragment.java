@@ -1,11 +1,15 @@
 package com.example.myapplication;
 
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class RecruiterSignUpFragment extends Fragment {
 
@@ -49,7 +53,26 @@ public class RecruiterSignUpFragment extends Fragment {
                 requireActivity().onBackPressed(); // Use onBackPressed to go back
             }
         });
+        TextView signin = view.findViewById(R.id.signinre);
 
+        signin.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: // Finger or mouse down
+                case MotionEvent.ACTION_HOVER_ENTER: // Mouse enters
+                    signin.setPaintFlags(signin.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    break;
+
+                case MotionEvent.ACTION_UP: // Finger or mouse up
+                case MotionEvent.ACTION_HOVER_EXIT: // Mouse exits
+                    signin.setPaintFlags(signin.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+
+                    // Use requireContext() to start the activity
+                    Intent intent = new Intent(requireContext(), Login.class);
+                    startActivity(intent);
+                    break;
+            }
+            return true;
+        });
         return view;
     }
 }
