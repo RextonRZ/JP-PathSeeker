@@ -12,7 +12,7 @@
         android:pivotX="70%"
         android:pivotY="70%"
         android:repeatMode="reverse"
-        android:repeatCount="infinite"/>
+        android:repeatCount="2"/>
 
     <!-- Fade animation (alpha) -->
     <alpha
@@ -20,5 +20,5 @@
         android:fromAlpha="0.8"
         android:toAlpha="1.0"
         android:repeatMode="reverse"
-        android:repeatCount="infinite"/>
+        android:repeatCount="2"/>
 </set>

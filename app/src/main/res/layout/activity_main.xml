@@ -19,18 +19,17 @@
         app:srcCompat="@drawable/pathseekerlogowhite" />
 
     <Button
-        android:id="@+id/GetStartedButton"
+        android:id="@+id/getStartedButton"
         android:layout_width="378dp"
         android:layout_height="58dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="192dp"
         android:backgroundTint="#D6D6D6"
         android:fontFamily="@font/judson"
-        android:text="@string/get_started_button_text"
-        android:textColor="#272626"
+        android:text="Get Started"
+        android:textColor="#000000"
         android:textSize="23sp"
-        app:iconTint="#00FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
