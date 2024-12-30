@@ -58,6 +58,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="35dp" />
 
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="9dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +83,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="9dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,7 +105,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="9dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,30 +125,11 @@
                 android:drawableEnd="@drawable/calendar"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="2dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/judson"
-                android:text=" Living Area"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="349dp"
-                android:layout_height="48dp"
-                android:autoText="false"
-                android:fontFamily="@font/judson"
-                android:hint="Your living area"
-                android:textSize="14sp" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="9dp" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -156,7 +141,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="9dp" />
 
             <EditText
                 android:id="@+id/companyName"
@@ -169,7 +154,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="9dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -181,7 +166,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="8dp" />
 
             <EditText
                 android:id="@+id/title"
@@ -194,7 +179,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -208,7 +193,7 @@
                 android:id="@+id/passwordInput"
                 android:layout_width="347dp"
                 android:layout_height="48dp"
-                android:drawableEnd="@drawable/password_icon"
+                android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
                 android:hint="Your password"
                 android:inputType="textPassword"
@@ -216,7 +201,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -230,7 +215,7 @@
                 android:id="@+id/confirmPasswordInput"
                 android:layout_width="347dp"
                 android:layout_height="48dp"
-                android:drawableEnd="@drawable/password_icon"
+                android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
                 android:hint="Your confirm password"
                 android:inputType="textPassword"
@@ -242,7 +227,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp" />
+                android:layout_height="8dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
@@ -253,10 +238,6 @@
                 android:text="Login"
                 android:textSize="23sp"
                 app:cornerRadius="30dp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="2dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

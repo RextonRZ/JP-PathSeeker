@@ -7,13 +7,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CareerResourcesMain#newInstance} factory method to
+ * Use the {@link CareerMain_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CareerResourcesMain extends Fragment {
+public class CareerMain_Fragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +25,7 @@ public class CareerResourcesMain extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CareerResourcesMain() {
+    public CareerMain_Fragment() {
         // Required empty public constructor
     }
 
@@ -37,8 +38,8 @@ public class CareerResourcesMain extends Fragment {
      * @return A new instance of fragment CareerResourcesMain.
      */
     // TODO: Rename and change types and number of parameters
-    public static CareerResourcesMain newInstance(String param1, String param2) {
-        CareerResourcesMain fragment = new CareerResourcesMain();
+    public static CareerMain_Fragment newInstance(String param1, String param2) {
+        CareerMain_Fragment fragment = new CareerMain_Fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,7 +59,9 @@ public class CareerResourcesMain extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_career_resources_main, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_career_resources_main, container, false);
+
+        return view;
     }
 }

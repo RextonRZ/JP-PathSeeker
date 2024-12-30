@@ -1,35 +1,54 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
 public class AppHomePage extends AppCompatActivity {
 
     private ImageSlider imageSlider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_home_page);
 
-        imageSlider = findViewById(R.id.imageSlider);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
 
-        ArrayList<SlideModel> slideModels = new ArrayList<>();
+        // Initialize the fragment when the activity is created (if no saved state exists)
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new AppHome_Fragment()) // Use your container ID
+                    .commit();
+        }
 
+        // Use the new method 'setOnItemSelectedListener'
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
 
-        slideModels.add(new SlideModel(R.drawable.slider1, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.slider2, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.slider3, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.slider4, ScaleTypes.FIT));
+            if (item.getItemId() == R.id.nav_home) {
+                selectedFragment = new AppHome_Fragment();
+            } else if (item.getItemId() == R.id.nav_search) {
+                selectedFragment = new Search_Fragment();
+            } else if (item.getItemId() == R.id.nav_career) {
+                selectedFragment = new CareerMain_Fragment();
+            }
 
-        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
 
-
+            return true;
+        });
     }
 }

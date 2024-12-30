@@ -11,10 +11,10 @@ import android.widget.ImageView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SearchMainPage#newInstance} factory method to
+ * Use the {@link Search_Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchMainPage extends Fragment {
+public class Search_Fragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,7 +25,7 @@ public class SearchMainPage extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public SearchMainPage() {
+    public Search_Fragment() {
         // Required empty public constructor
     }
 
@@ -38,8 +38,8 @@ public class SearchMainPage extends Fragment {
      * @return A new instance of fragment SearchMainPage.
      */
     // TODO: Rename and change types and number of parameters
-    public static SearchMainPage newInstance(String param1, String param2) {
-        SearchMainPage fragment = new SearchMainPage();
+    public static Search_Fragment newInstance(String param1, String param2) {
+        Search_Fragment fragment = new Search_Fragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,15 +61,6 @@ public class SearchMainPage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_main_page, container, false);
-
-        // Find the back icon after inflating the view
-        ImageView backIcon = view.findViewById(R.id.back_icon);
-        backIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().onBackPressed();
-            }
-        });
 
         return view;
     }

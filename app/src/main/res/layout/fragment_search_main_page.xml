@@ -17,22 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="65dp"
-            android:contentDescription="Back icon"
-            android:src="@drawable/back" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="110dp"
             android:fontFamily="@font/judson"
             android:text="Discover"
             android:textColor="@color/white"
@@ -44,7 +34,7 @@
             android:id="@+id/findAJobCard"
             android:layout_width="394dp"
             android:layout_height="115dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             app:cardBackgroundColor="#F8F8F8"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
@@ -180,19 +170,4 @@
                 android:src="@drawable/arrow" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <!-- BottomNavigationView -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#000000"
-        app:itemIconTint="@color/nav_item_color_selector"
-        app:itemRippleColor="@color/grey"
-        app:itemTextColor="@color/nav_item_color_selector"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,22 @@
     android:background="@color/black"
     tools:context=".Login">
 
+    <TextView
+        android:id="@+id/occupationErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF0000"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:layout_marginTop="550dp"
+        android:fontFamily="@font/judson"
+        android:text="Error message here"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="38dp"
+        android:elevation="10dp" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="373dp"
         android:orientation="vertical"
@@ -32,10 +47,10 @@
             android:layout_marginTop="35dp"
             android:fontFamily="@font/judson"
             android:text="Sign Up"
+            android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="42sp"
-            android:textStyle="bold"
-            android:textAlignment="center"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -79,7 +94,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="17dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,7 +116,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="13dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -123,28 +138,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/judson"
-                android:text=" Living Area"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="349dp"
-                android:layout_height="48dp"
-                android:autoText="false"
-                android:fontFamily="@font/judson"
-                android:hint="Your living area"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="17dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -156,7 +150,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="17dp" />
 
             <Spinner
                 android:id="@+id/occupationSpinner"
@@ -171,9 +165,11 @@
                 android:textSize="10sp"
                 android:spinnerMode="dropdown" />
 
+
+
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="17dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -187,7 +183,7 @@
                 android:id="@+id/passwordInput"
                 android:layout_width="347dp"
                 android:layout_height="48dp"
-                android:drawableEnd="@drawable/password_icon"
+                android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
                 android:hint="Your password"
                 android:inputType="textPassword"
@@ -195,7 +191,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="17dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -209,7 +205,7 @@
                 android:id="@+id/confirmPasswordInput"
                 android:layout_width="347dp"
                 android:layout_height="48dp"
-                android:drawableEnd="@drawable/password_icon"
+                android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
                 android:hint="Your confirm password"
                 android:inputType="textPassword"
@@ -221,7 +217,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="7dp" />
+                android:layout_height="17dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
@@ -262,7 +258,11 @@
                     android:textColor="#6B5858"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="7dp" />
 
 
         </LinearLayout>

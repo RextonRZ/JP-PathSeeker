@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:textSize="13sp"
-    android:textColor="#949494"
+    android:textColor="@color/darkgrey"
     android:fontFamily="@font/judson"
     android:gravity="start"
     android:background="?attr/selectableItemBackground" />
