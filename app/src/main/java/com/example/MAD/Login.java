@@ -207,13 +207,23 @@ public class Login extends AppCompatActivity {
         String passwordFromDB = userSnapshot.child("password").getValue(String.class);
 
         if (passwordFromDB != null && passwordFromDB.equals(userPassword)) {
-            String name = userSnapshot.child("name").getValue(String.class);
-            String dob = userSnapshot.child("dob").getValue(String.class);
-            String email = userSnapshot.child("email").getValue(String.class);
-            String workingStatus = userSnapshot.child("workingStatus").getValue(String.class);
+            String userType = userSnapshot.getRef().getParent().getKey(); // Check if it's 'jobseeker' or 'recruiter'
+
+            String name;
+            if ("recruiter".equals(userType)) {
+                name = userSnapshot.child("companyName").getValue(String.class); // Recruiter uses companyName
+                String sector = userSnapshot.child("sector").getValue(String.class);
+
+            } else {
+                name = userSnapshot.child("name").getValue(String.class); // Jobseeker uses name
+                String dob = userSnapshot.child("dob").getValue(String.class);
+                String email = userSnapshot.child("email").getValue(String.class);
+                String workingStatus = userSnapshot.child("workingStatus").getValue(String.class);
+            }
+
 
             Intent intent = new Intent(Login.this, AppHomePage.class);
-            intent.putExtra("userName", name); // Pass the username
+            intent.putExtra("userName", name); // Pass the username or companyName
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
