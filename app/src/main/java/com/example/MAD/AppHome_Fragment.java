@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -27,6 +28,8 @@ public class AppHome_Fragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private ImageSlider imageSlider;
+
+    private TextView userNameTextView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,6 +84,18 @@ public class AppHome_Fragment extends Fragment {
 
         // Set the image list for the slider
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        // Retrieve the username from the bundle
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String userName = bundle.getString("userName");
+
+            // Display the username in the TextView
+            userNameTextView = view.findViewById(R.id.userName);
+            if (userName != null) {
+                userNameTextView.setText(userName);
+            }
+        }
 
         return view;
     }

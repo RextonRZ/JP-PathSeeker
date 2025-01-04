@@ -17,12 +17,22 @@ public class AppHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_home_page);
 
+        // Retrieve the username from the Intent
+        String userName = getIntent().getStringExtra("userName");
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
 
         // Initialize the fragment when the activity is created (if no saved state exists)
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new AppHome_Fragment()) // Use your container ID
+            AppHome_Fragment appHomeFragment = new AppHome_Fragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("userName", userName); // Add the username to the bundle
+            appHomeFragment.setArguments(bundle);
+
+            // Load the fragment
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, appHomeFragment) // Replace 'fragment_container' with the ID of your FrameLayout
                     .commit();
         }
 

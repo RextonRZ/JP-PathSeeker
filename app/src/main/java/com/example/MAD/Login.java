@@ -36,6 +36,9 @@ public class Login extends AppCompatActivity {
 
     EditText email, password;
     Button loginBtn;
+
+    TextView userName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class Login extends AppCompatActivity {
         backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -203,9 +206,14 @@ public class Login extends AppCompatActivity {
     private void validateCredentials(DataSnapshot userSnapshot, String userPassword) {
         String passwordFromDB = userSnapshot.child("password").getValue(String.class);
 
-
         if (passwordFromDB != null && passwordFromDB.equals(userPassword)) {
+            String name = userSnapshot.child("name").getValue(String.class);
+            String dob = userSnapshot.child("dob").getValue(String.class);
+            String email = userSnapshot.child("email").getValue(String.class);
+            String workingStatus = userSnapshot.child("workingStatus").getValue(String.class);
+
             Intent intent = new Intent(Login.this, AppHomePage.class);
+            intent.putExtra("userName", name); // Pass the username
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
