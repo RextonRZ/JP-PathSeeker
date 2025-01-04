@@ -81,7 +81,6 @@
                 android:layout_width="349dp"
                 android:layout_height="54dp"
                 android:autoText="false"
-                android:drawableEnd="@drawable/done_icon"
                 android:fontFamily="@font/judson"
                 android:hint="Your email"
                 android:inputType="textEmailAddress"
@@ -107,7 +106,7 @@
                 android:id="@+id/passwordInput"
                 android:layout_width="347dp"
                 android:layout_height="54dp"
-                android:drawableEnd="@drawable/password_icon"
+                android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
                 android:hint="Your password"
                 android:inputType="textPassword"
@@ -144,7 +143,7 @@
                 android:layout_height="10dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/loginButton"
+                android:id="@+id/loginBtn"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/black"

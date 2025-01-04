@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.MAD;
 
 import androidx.appcompat.app.AppCompatActivity;
 

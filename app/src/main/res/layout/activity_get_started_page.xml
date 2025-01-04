@@ -79,7 +79,7 @@
         app:srcCompat="@drawable/group_159" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/signUpBtnJS"
         android:layout_width="190dp"
         android:layout_height="53dp"
         android:layout_marginStart="16dp"
@@ -112,7 +112,7 @@
         app:layout_constraintBottom_toTopOf="@+id/OrImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.125"
-        app:layout_constraintStart_toEndOf="@+id/loginButton"
+        app:layout_constraintStart_toEndOf="@+id/signUpBtnJS"
         app:layout_constraintTop_toBottomOf="@+id/logo"
         app:layout_constraintVertical_bias="0.0" />
 

@@ -7,7 +7,7 @@
         android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.myapplication.JobSeekerSignUpFragment" />
+        android:name="com.example.MAD.JobSeekerSignUpFragment" />
 
     <LinearLayout
         android:layout_width="356dp"

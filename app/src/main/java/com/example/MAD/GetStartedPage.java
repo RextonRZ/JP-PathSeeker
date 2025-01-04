@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.MAD;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +14,7 @@ public class GetStartedPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started_page);
 
-        Button loginButton = findViewById(R.id.loginButton);
+        Button loginButton = findViewById(R.id.signUpBtnJS);
         Button signUpBtn = findViewById(R.id.signUpBtn);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

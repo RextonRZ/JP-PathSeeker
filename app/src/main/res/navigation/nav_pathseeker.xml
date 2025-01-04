@@ -8,21 +8,21 @@
     <fragment
         android:id="@+id/homeFragment"
         android:label="Home"
-        android:name="com.example.myapplication.AppHome_Fragment"
+        android:name="com.example.MAD.AppHome_Fragment"
         android:layout="@layout/fragment_app_home"
         tools:layout="@layout/fragment_app_home" />
 
     <fragment
         android:id="@+id/searchFragment"
         android:label="Profile"
-        android:name="com.example.myapplication.Search_Fragment"
+        android:name="com.example.MAD.Search_Fragment"
         android:layout="@layout/fragment_search_main_page"
         tools:layout="@layout/fragment_search_main_page" />
 
     <fragment
         android:id="@+id/careerFragment"
         android:label="Settings"
-        android:name="com.example.myapplication.CareerMain_Fragment"
+        android:name="com.example.MAD.CareerMain_Fragment"
         android:layout="@layout/fragment_career_resources_main"
         tools:layout="@layout/fragment_career_resources_main" />
 </navigation>

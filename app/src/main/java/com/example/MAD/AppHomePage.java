@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.MAD;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -6,11 +6,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 
 import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.constants.ScaleTypes;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
 
 public class AppHomePage extends AppCompatActivity {
 

@@ -7,6 +7,20 @@
     android:background="@color/black"
     tools:context=".Login">
 
+    <TextView
+        android:id="@+id/sectorErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="512dp"
+        android:elevation="20dp"
+        android:fontFamily="@font/judson"
+        android:text="Error message here"
+        android:textColor="#FF0000"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="373dp"
@@ -56,19 +70,23 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="35dp" />
+                android:layout_height="30dp" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="9dp" />
+                android:layout_height="24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/judson"
-                android:text=" Email address"
+                android:text=" Company email"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="15dp" />
 
             <EditText
                 android:id="@+id/emailInput"
@@ -77,58 +95,14 @@
                 android:autoText="false"
                 android:drawableEnd="@drawable/done_icon"
                 android:fontFamily="@font/judson"
-                android:hint="Your email"
+                android:hint="Please fill in a valid company email"
                 android:inputType="textEmailAddress"
                 android:textSize="14sp" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="9dp" />
+                android:layout_height="24dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/judson"
-                android:text=" Name"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="349dp"
-                android:layout_height="48dp"
-                android:autoText="false"
-                android:fontFamily="@font/judson"
-                android:hint="Your name"
-                android:inputType="textPersonName"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="9dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/judson"
-                android:text=" Date of birth"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/dateOfBirth"
-                android:layout_width="349dp"
-                android:layout_height="48dp"
-                android:autoText="false"
-                android:fontFamily="@font/judson"
-                android:hint="DD/MM/YYYY"
-                android:drawableEnd="@drawable/calendar"
-                android:textSize="14sp" />
-
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="9dp" />
 
 
             <TextView
@@ -149,37 +123,42 @@
                 android:layout_height="48dp"
                 android:autoText="false"
                 android:fontFamily="@font/judson"
-                android:hint="Your working company"
+                android:hint="Please fill in your company name"
                 android:textSize="14sp" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="9dp" />
+                android:layout_height="24dp" />
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/judson"
-                android:text=" Title"
+                android:text=" Sector"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="8dp" />
+                android:layout_height="17dp" />
 
-            <EditText
-                android:id="@+id/title"
-                android:layout_width="349dp"
-                android:layout_height="48dp"
-                android:autoText="false"
+            <Spinner
+                android:id="@+id/sectorSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:padding="8dp"
+                android:background="@drawable/rounded_spinner_background"
+                android:popupBackground="@color/white"
+                android:textAlignment="viewStart"
                 android:fontFamily="@font/judson"
-                android:hint="Your working title"
-                android:textSize="14sp" />
+                android:textSize="10sp"
+                android:spinnerMode="dropdown" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="8dp" />
+                android:layout_height="24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -188,6 +167,10 @@
                 android:text=" Password"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="15dp" />
 
             <EditText
                 android:id="@+id/passwordInput"
@@ -201,7 +184,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="8dp" />
+                android:layout_height="24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -210,6 +193,10 @@
                 android:text=" Confirm Password"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="15dp" />
 
             <EditText
                 android:id="@+id/confirmPasswordInput"
@@ -227,15 +214,15 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="8dp" />
+                android:layout_height="24dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/loginButton"
+                android:id="@+id/signUpBtnR"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/black"
                 android:fontFamily="@font/judson"
-                android:text="Login"
+                android:text="Sign Up"
                 android:textSize="23sp"
                 app:cornerRadius="30dp" />
 

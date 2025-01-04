@@ -14,4 +14,22 @@
         <item>Unemployed</item>
         <item>Other</item>
     </string-array>
+
+    <!-- Sector dropdown options -->
+    <string-array name="sector_array">
+        <item>Select your company sector</item>
+        <item>Technology</item>
+        <item>Engineering</item>
+        <item>Healthcare</item>
+        <item>Business</item>
+        <item>Education</item>
+        <item>Creative</item>
+        <item>Retail</item>
+        <item>Food</item>
+        <item>Transportation</item>
+        <item>Administrative</item>
+        <item>Law</item>
+        <item>Science</item>
+        <item>Other</item>
+    </string-array>
 </resources>

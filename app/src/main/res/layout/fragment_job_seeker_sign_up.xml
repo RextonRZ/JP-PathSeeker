@@ -19,7 +19,7 @@
         android:text="Error message here"
         android:layout_alignParentTop="true"
         android:layout_marginStart="38dp"
-        android:elevation="10dp" />
+        android:elevation="20dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -220,12 +220,12 @@
                 android:layout_height="17dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/loginButton"
+                android:id="@+id/signUpBtnJS"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="@color/black"
                 android:fontFamily="@font/judson"
-                android:text="Login"
+                android:text="Sign Up"
                 android:textSize="23sp"
                 app:cornerRadius="30dp" />
 

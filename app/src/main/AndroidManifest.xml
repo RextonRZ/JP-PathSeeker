@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.myapplication">
+    package="com.example.MAD">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -14,29 +15,29 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".AppHomePage"
+            android:name="com.example.MAD.AppHomePage"
             android:exported="false"/>
         <activity
-            android:name=".ForgotPW"
+            android:name="com.example.MAD.ForgotPW"
             android:exported="false" />
         <activity
-            android:name=".SignUp"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name="com.example.MAD.SignUp"
+            android:exported="false" />
+        <activity
+            android:name="com.example.MAD.Login"
+            android:exported="false" />
+        <activity
+            android:name="com.example.MAD.GetStartedPage"
+            android:exported="false" />
+        <activity
+            android:name="com.example.MAD.MainActivity"
+            android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Login"
-            android:exported="false" />
-        <activity
-            android:name=".GetStartedPage"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"/>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

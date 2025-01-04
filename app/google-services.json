@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "524490591479",
+    "firebase_url": "https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pathseeker-40c02",
+    "storage_bucket": "pathseeker-40c02.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524490591479:android:189c88e20d48dfaca597f2",
+        "android_client_info": {
+          "package_name": "com.example.MAD"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4EUGQMFQihRqtY-6LoguQzShabQJq7Vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524490591479:android:854a88260ad76f31a597f2",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4EUGQMFQihRqtY-6LoguQzShabQJq7Vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524490591479:android:12e2dd766d778b47a597f2",
+        "android_client_info": {
+          "package_name": "com.example.pathseekerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4EUGQMFQihRqtY-6LoguQzShabQJq7Vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
