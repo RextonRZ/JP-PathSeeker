@@ -78,7 +78,7 @@
                 android:layout_width="349dp"
                 android:layout_height="54dp"
                 android:autoText="false"
-                android:drawableEnd="@drawable/done_icon"
+                android:drawableEnd="@null"
                 android:fontFamily="@font/judson"
                 android:hint="Your email"
                 android:inputType="textEmailAddress"
