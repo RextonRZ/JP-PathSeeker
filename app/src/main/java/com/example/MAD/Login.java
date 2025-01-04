@@ -132,7 +132,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void checkUser() {
-        String userEmail = email.getText().toString().trim().replace(".", "_");
+        String userEmail = email.getText().toString().trim().toLowerCase().replace(".", "_"); // Convert to lowercase
         String userPassword = password.getText().toString().trim();
         String hashPassword = hashPassword(userPassword);
 
