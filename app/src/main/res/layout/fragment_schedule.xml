@@ -132,8 +132,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/timeslotRecyclerView"
-        android:layout_width="382dp"
-        android:layout_height="351dp"
+        android:layout_width="389dp"
+        android:layout_height="298dp"
         android:layout_margin="16dp"
         app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,11 +146,11 @@
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="388dp"
+        android:layout_marginTop="320dp"
+        android:fontFamily="@font/judson"
         android:text="Check My Calendar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etdate"
-        android:fontFamily="@font/judson" />
+        app:layout_constraintTop_toBottomOf="@+id/etdate" />
 </androidx.constraintlayout.widget.ConstraintLayout>

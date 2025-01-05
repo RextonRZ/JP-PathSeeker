@@ -1,8 +1,10 @@
 package com.example.MAD;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -16,11 +18,50 @@ public class AppHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_home_page);
 
-        // Set up NavController
-        NavController navController = Navigation.findNavController(this, R.id.fragment_container);
+        // Retrieve data from Intent
+        Intent intent = getIntent();
+        String userEmail = intent.getStringExtra("userEmail");
+        String userName = intent.getStringExtra("userName");
+        String dob = intent.getStringExtra("dob");
+        String workingStatus = intent.getStringExtra("workingStatus");
+        String sector = intent.getStringExtra("sector");
+
+        // Prepare the Bundle
+        Bundle args = new Bundle();
+        args.putString("userEmail", userEmail);
+        args.putString("userName", userName);
+        args.putString("dob", dob);
+        args.putString("workingStatus", workingStatus);
+        args.putString("sector", sector);
+
+        // Set up BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        NavController navController = Navigation.findNavController(this, R.id.fragment_container);
 
         // Link BottomNavigationView with NavController
         NavigationUI.setupWithNavController(bottomNav, navController);
+
+        // Add Main Fragments with Arguments
+        setupMainFragments(args);
+    }
+
+    private void setupMainFragments(Bundle args) {
+        // Create instances of all main fragments
+        AppHome_Fragment homeFragment = new AppHome_Fragment();
+        homeFragment.setArguments(args);
+
+        Search_Fragment searchFragment = new Search_Fragment();
+        searchFragment.setArguments(args);
+
+        CareerMain_Fragment careerFragment = new CareerMain_Fragment();
+        careerFragment.setArguments(args);
+
+        ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.setArguments(args);
+
+        // Replace the initial fragment (e.g., AppHome_Fragment)
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, homeFragment)
+                .commit();
     }
 }

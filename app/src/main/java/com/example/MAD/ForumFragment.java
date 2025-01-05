@@ -1,6 +1,7 @@
 package com.example.MAD;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -40,7 +41,13 @@ public class ForumFragment extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
 
         ImageView backIcon = view.findViewById(R.id.back_icon);
-        backIcon.setOnClickListener(v -> requireActivity().onBackPressed());
+        backIcon.setOnClickListener(v -> {
+            // Safely handle back press
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.onBackPressed();
+            }
+        });
 
         setUpWebView();
         setUpToolbar(view);
@@ -53,15 +60,25 @@ public class ForumFragment extends Fragment {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                progressBar.setVisibility(View.VISIBLE);
-                requireActivity().setTitle("Loading...");
+                if (isAdded() && progressBar != null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.setTitle("Loading...");
+                    }
+                }
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressBar.setVisibility(View.GONE);
-                requireActivity().setTitle("Finished");
+                if (isAdded() && progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.setTitle("Finished");
+                    }
+                }
             }
         });
 
@@ -76,7 +93,7 @@ public class ForumFragment extends Fragment {
     }
 
     private void restartFragment() {
-        if (getFragmentManager() != null) {
+        if (isAdded() && getFragmentManager() != null) {
             getFragmentManager().beginTransaction()
                     .detach(this)
                     .attach(this)
@@ -84,8 +101,20 @@ public class ForumFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (webView != null) {
+            webView.stopLoading();
+            webView.destroy();
+        }
+        webView = null;
+        progressBar = null;
+        toolbar = null;
+    }
+
     public boolean handleBackPress(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && webView.canGoBack()) {
+        if (webView != null && event.getAction() == KeyEvent.ACTION_DOWN && webView.canGoBack()) {
             webView.goBack();
             return true;
         }

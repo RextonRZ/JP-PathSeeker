@@ -32,10 +32,17 @@ public class ScheduleFragment extends Fragment {
     private EditText etdate;
     private ImageButton btndate;
     private int date, month, year;
+    private String currentUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+
+        // Retrieve the current user email from arguments
+        Bundle args = getArguments();
+        if (args != null) {
+            currentUser = args.getString("userEmail");
+        }
 
         // Initialize RecyclerView but don't set adapter yet
         timeSlotRecyclerView = view.findViewById(R.id.timeslotRecyclerView);
@@ -54,8 +61,6 @@ public class ScheduleFragment extends Fragment {
         setupProfile(view);
 
         return view;
-
-
     }
 
     @Override
@@ -110,7 +115,7 @@ public class ScheduleFragment extends Fragment {
             return;
         }
 
-        adapter = new TimeSlotAdapter(requireContext(), timeSlots, "", mentorId, selectedDate);
+        adapter = new TimeSlotAdapter(requireContext(), timeSlots, "", mentorId, selectedDate, currentUser);
         timeSlotRecyclerView.setAdapter(adapter);
         timeSlotRecyclerView.setVisibility(View.VISIBLE); // Show the RecyclerView
     }
@@ -130,11 +135,10 @@ public class ScheduleFragment extends Fragment {
         String mentorId = bundle != null ? bundle.getString("profileName") : "";
         String date = etdate.getText() != null ? etdate.getText().toString() : "";
 
-        adapter = new TimeSlotAdapter(requireContext(), timeSlots, "", mentorId, date);
+        adapter = new TimeSlotAdapter(requireContext(), timeSlots, "", mentorId, date, currentUser);
         timeSlotRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         timeSlotRecyclerView.setAdapter(adapter);
     }
-
 
     private void setupProfile(View view) {
         Bundle bundle = getArguments();

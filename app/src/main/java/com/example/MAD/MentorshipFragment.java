@@ -54,41 +54,11 @@ public class MentorshipFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Initialize empty lists
         titles = new ArrayList<>();
         mImages = new ArrayList<>();
         descriptions = new ArrayList<>();
-        mentorsList = new ArrayList<>(); // Initialize mentorsList
-
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        firebaseHelper.fetchMentors(new FirebaseHelper.DataCallback() {
-            @Override
-            public void onSuccess(List<Mentor> fetchedMentors) {
-                mentorsList.clear();
-                mentorsList.addAll(fetchedMentors);
-                titles.clear();
-                mImages.clear();
-                descriptions.clear();
-
-                for (Mentor mentor : fetchedMentors) {
-                    titles.add(mentor.mentor_name);
-
-                    // Safely retrieve the image resource ID
-                    int imageResId = getValidImageResourceId(mentor.mentor_profilepic);
-                    mImages.add(imageResId);
-
-                    descriptions.add(mentor.mentor_title);
-                }
-
-                adapter = new MyAdapter(requireContext(), titles, mImages, descriptions, mentorsList);
-                mRecyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(requireContext(), "Failed to fetch mentors: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        mentorsList = new ArrayList<>();
     }
 
     @Override
@@ -97,6 +67,8 @@ public class MentorshipFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recyclerview);
         searchView = view.findViewById(R.id.searchView);
+
+        // Initialize adapter with empty lists
         adapter = new MyAdapter(requireContext(), titles, mImages, descriptions, mentorsList);
 
         ImageView backIcon = view.findViewById(R.id.back_icon);
@@ -106,42 +78,75 @@ public class MentorshipFragment extends Fragment {
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setAdapter(adapter);
 
+        setupSearchView();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Fetch data whenever the fragment becomes visible
+        fetchMentorsData();
+    }
+
+    private void setupSearchView() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Handle when the search is submitted
-                filterList(query);
+                if (!titles.isEmpty()) {  // Only filter if we have data
+                    filterList(query);
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Handle live text changes
-                filterList(newText);
+                if (!titles.isEmpty()) {  // Only filter if we have data
+                    filterList(newText);
+                }
                 return false;
             }
         });
-
-
-        return view;
     }
 
-    private int getValidImageResourceId(String resourceName) {
-        if (resourceName == null || resourceName.isEmpty()) {
-            // Return a default placeholder image resource ID
-            return R.drawable.expert1;
-        }
+    private void fetchMentorsData() {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        firebaseHelper.fetchMentors(new FirebaseHelper.DataCallback() {
+            @Override
+            public void onSuccess(List<Mentor> fetchedMentors) {
+                if (!isAdded()) return;
 
-        int resId = getResources().getIdentifier(resourceName, "drawable", requireContext().getPackageName());
-        if (resId == 0) {
-            // Return a default placeholder if the resource is not found
-            return R.drawable.expert1;
-        }
+                mentorsList.clear();
+                mentorsList.addAll(fetchedMentors);
+                titles.clear();
+                mImages.clear();
+                descriptions.clear();
 
-        return resId;
+                for (Mentor mentor : fetchedMentors) {
+                    titles.add(mentor.mentor_name);
+                    int imageResId = getValidImageResourceId(mentor.mentor_profilepic);
+                    mImages.add(imageResId);
+                    descriptions.add(mentor.mentor_title);
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (!isAdded()) return;
+                Toast.makeText(requireContext(), "Failed to fetch mentors: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void filterList(String text) {
+        if (titles.isEmpty()) {
+            // Don't show "No data found" toast if we're still loading data
+            return;
+        }
+
         List<String> filteredTitles = new ArrayList<>();
         List<Integer> filteredImages = new ArrayList<>();
         List<String> filteredDescriptions = new ArrayList<>();
@@ -159,11 +164,26 @@ public class MentorshipFragment extends Fragment {
             }
         }
 
-        if (filteredTitles.isEmpty()) {
-            // Optionally, display an empty state
+        if (filteredTitles.isEmpty() && !text.isEmpty()) {
+            // Only show "No data found" toast if we have data but no matches
             Toast.makeText(requireContext(), "No data found", Toast.LENGTH_SHORT).show();
         }
 
         adapter.setFilteredList(filteredTitles, filteredImages, filteredDescriptions);
+    }
+
+    private int getValidImageResourceId(String resourceName) {
+        if (resourceName == null || resourceName.isEmpty()) {
+            // Return a default placeholder image resource ID
+            return R.drawable.expert1;
+        }
+
+        int resId = getResources().getIdentifier(resourceName, "drawable", requireContext().getPackageName());
+        if (resId == 0) {
+            // Return a default placeholder if the resource is not found
+            return R.drawable.expert1;
+        }
+
+        return resId;
     }
 }

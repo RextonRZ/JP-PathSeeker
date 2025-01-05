@@ -49,21 +49,87 @@ public class ArticleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Initialize empty lists
         titles = new ArrayList<>();
         mImages = new ArrayList<>();
         subtitle = new ArrayList<>();
         articleList = new ArrayList<>();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_article, container, false);
+
+        mRecyclerView = view.findViewById(R.id.recyclerview3);
+        searchView = view.findViewById(R.id.searchView3);
 
         // Initialize adapter with empty lists
         adapter = new ArticleAdapter(requireContext(), titles, subtitle, mImages, articleList);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mRecyclerView.setAdapter(adapter);
 
+        ImageView backIcon = view.findViewById(R.id.back_icon);
+        backIcon.setOnClickListener(v -> requireActivity().onBackPressed());
+
+        setupSearchView();
+        setupTabLayout(view);
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Fetch data whenever the fragment becomes visible
+        fetchArticlesData();
+    }
+
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!titles.isEmpty()) {  // Only filter if we have data
+                    filterList(query);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!titles.isEmpty()) {  // Only filter if we have data
+                    filterList(newText);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void setupTabLayout(View view) {
+        tabLayout = view.findViewById(R.id.tablayout);
+        tabLayout.selectTab(tabLayout.getTabAt(0));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 1 && isAdded()) {
+                    Navigation.findNavController(requireView()).navigate(R.id.healthFragment);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
+    private void fetchArticlesData() {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         firebaseHelper.fetchArticle(new FirebaseHelper.ArticleCallback() {
             @Override
             public void onSuccess(List<Article> fetchedArticle) {
-                if (!isAdded()) {
-                    return; // Fragment not attached to activity
-                }
+                if (!isAdded()) return;
 
                 articleList.clear();
                 articleList.addAll(fetchedArticle);
@@ -85,99 +151,28 @@ public class ArticleFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Failed to fetch articles: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
+                if (!isAdded()) return;
+                Toast.makeText(requireContext(), "Failed to fetch articles: " + e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_article, container, false);
-
-        mRecyclerView = view.findViewById(R.id.recyclerview3);
-        searchView = view.findViewById(R.id.searchView3);
-
-        // Add this line to set the LayoutManager
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        adapter = new ArticleAdapter(requireContext(), titles, subtitle, mImages, articleList);
-        mRecyclerView.setAdapter(adapter);
-
-        ImageView backIcon = view.findViewById(R.id.back_icon);
-        backIcon.setOnClickListener(v -> requireActivity().onBackPressed());
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterList(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterList(newText);
-                return false;
-            }
-        });
-
-        tabLayout = view.findViewById(R.id.tablayout);
-        tabLayout.selectTab(tabLayout.getTabAt(0));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 1) { // Articles
-                    Navigation.findNavController(requireView()).navigate(R.id.healthFragment);
-                }
-                // Don't add else case - no need to navigate when Wellness Expert tab is selected
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
-
-        return view;
-    }
-
-    private void goToArticleFragment() {
-        if (isAdded()) {
-            Navigation.findNavController(requireView()).navigate(R.id.articleFragment);
-        }
-    }
-
-    private void goToHealthFragment() {
-        // Remove tab selection here - no need to reselect current tab
-        if (isAdded()) {
-            Navigation.findNavController(requireView()).navigate(R.id.healthFragment);
-        }
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
 
     private int getValidImageResourceId(String resourceName) {
         if (resourceName == null || resourceName.isEmpty()) {
-            // Return a default placeholder image resource ID
             return R.drawable.article1;
         }
 
         int resId = getResources().getIdentifier(resourceName, "drawable", requireContext().getPackageName());
-        if (resId == 0) {
-            // Return a default placeholder if the resource is not found
-            return R.drawable.article1;
-        }
-
-        return resId;
+        return resId == 0 ? R.drawable.article1 : resId;
     }
 
     private void filterList(String text) {
+        if (titles.isEmpty()) {
+            // Don't show "No data found" toast if we're still loading data
+            return;
+        }
+
         List<String> filteredTitles = new ArrayList<>();
         List<Integer> filteredImages = new ArrayList<>();
         List<String> filteredSubtitle = new ArrayList<>();
@@ -197,7 +192,8 @@ public class ArticleFragment extends Fragment {
             }
         }
 
-        if (filteredTitles.isEmpty()) {
+        if (filteredTitles.isEmpty() && !text.isEmpty()) {
+            // Only show "No data found" toast if we have data but no matches
             Toast.makeText(requireContext(), "No data found", Toast.LENGTH_SHORT).show();
         }
 

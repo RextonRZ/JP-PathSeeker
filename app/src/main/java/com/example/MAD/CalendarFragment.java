@@ -26,7 +26,7 @@ public class CalendarFragment extends Fragment {
     private TextView bookedInfoTextView;
     private DatabaseReference databaseReference;
     private static final String TAG = "CalendarFragment";
-    private static final String currentUser = "jeremy@gmail.com";
+    String currentUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,11 +35,16 @@ public class CalendarFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
         bookedInfoTextView = view.findViewById(R.id.bookedInfoTextView);
 
+        Bundle args = getArguments();
+        if (args != null) {
+            currentUser = args.getString("userEmail");
+        }
+
         ImageView backIcon = view.findViewById(R.id.back_icon);
         backIcon.setOnClickListener(v -> requireActivity().onBackPressed());
 
         // Get reference to the root of the database
-        databaseReference = FirebaseDatabase.getInstance("https://mad-career-default-rtdb.asia-southeast1.firebasedatabase.app")
+        databaseReference = FirebaseDatabase.getInstance("https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {

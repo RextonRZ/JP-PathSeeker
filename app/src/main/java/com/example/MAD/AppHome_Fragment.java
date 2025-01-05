@@ -85,17 +85,18 @@ public class AppHome_Fragment extends Fragment {
         // Set the image list for the slider
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-        // Retrieve the username from the bundle
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String userName = bundle.getString("userName");
+        userNameTextView = view.findViewById(R.id.userName);
 
-            // Display the username in the TextView
-            userNameTextView = view.findViewById(R.id.userName);
-            if (userName != null) {
-                userNameTextView.setText(userName);
-            }
+        // Retrieve data from arguments
+        Bundle args = getArguments();
+        if (args != null) {
+            String userName = args.getString("userName");
+
+            // Set the userName to the TextView
+            userNameTextView.setText(userName != null ? userName : "No Name");
         }
+
+
 
         return view;
     }

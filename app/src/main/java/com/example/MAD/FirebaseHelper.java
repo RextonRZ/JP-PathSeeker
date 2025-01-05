@@ -17,7 +17,6 @@ public class FirebaseHelper {
     private DatabaseReference healthExpertsRef;
     private DatabaseReference databaseReference;
     private DatabaseReference articlesRef;
-    private String currentUser = "jeremy@gmail.com";
 
     public interface DataCallback {
         void onSuccess(List<Mentor> mentors);
@@ -30,7 +29,7 @@ public class FirebaseHelper {
     }
 
     public FirebaseHelper() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://mad-career-default-rtdb.asia-southeast1.firebasedatabase.app");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app/");
         databaseReference = database.getReference("mentors");  // Keep original reference
         mentorsRef = database.getReference("mentors");
         bookedSlotsRef = database.getReference("bookedSlots");

@@ -60,18 +60,32 @@ public class CareerMain_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_career_resources_main, container, false);
 
-
         CardView healthCard = view.findViewById(R.id.healthCard);
-        healthCard.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_careerMain_to_articleFragment));
+        healthCard.setOnClickListener(v -> {
+            // Check current destination before navigating
+            if (Navigation.findNavController(v).getCurrentDestination().getId() == R.id.careerFragment) {
+                Navigation.findNavController(view).navigate(R.id.action_careerMain_to_articleFragment);
+            }
+        });
 
         CardView mentorCard = view.findViewById(R.id.mentorCard);
-        mentorCard.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_careerMain_to_mentorshipFragment));
+        mentorCard.setOnClickListener(v -> {
+            // Check current destination before navigating
+            if (Navigation.findNavController(v).getCurrentDestination().getId() == R.id.careerFragment) {
+                Navigation.findNavController(view).navigate(R.id.action_careerMain_to_mentorshipFragment);
+            }
+        });
 
         CardView forumCard = view.findViewById(R.id.forumCard);
-        forumCard.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_careerMain_to_forumFragment));
+        forumCard.setOnClickListener(v -> {
+            // Check current destination before navigating
+            if (Navigation.findNavController(v).getCurrentDestination().getId() == R.id.careerFragment) {
+                Navigation.findNavController(view).navigate(R.id.action_careerMain_to_forumFragment);
+            }
+        });
+
         return view;
     }
 }
