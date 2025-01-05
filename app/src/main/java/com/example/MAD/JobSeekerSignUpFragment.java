@@ -476,25 +476,46 @@ public class JobSeekerSignUpFragment extends Fragment {
             String email = emailInput.getText().toString();
             String sanitizedEmail = email.replace(".", "_").replace("#", "_");
 
-            // Check if email exists in Firebase
-            FirebaseDatabase.getInstance().getReference("users").child("jobseeker").child(sanitizedEmail)
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+            // Check if email exists in "jobseeker" node
+            databaseReference.child("users").child("jobseeker").child(sanitizedEmail)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                // If email exists, show error and return
-                                emailInput.setError("Email is already registered");
+                        public void onDataChange(DataSnapshot jobseekerSnapshot) {
+                            if (jobseekerSnapshot.exists()) {
+                                // If email exists in "jobseeker", show error and return
+                                emailInput.setError("Email is already registered as a jobseeker");
                                 emailInput.requestFocus();
                             } else {
-                                // If email does not exist, proceed with user registration
-                                proceedWithSignUp(view);
+                                // Check if email exists in "recruiter" node
+                                databaseReference.child("users").child("recruiter").child(sanitizedEmail)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot recruiterSnapshot) {
+                                                if (recruiterSnapshot.exists()) {
+                                                    // If email exists in "recruiter", show error and return
+                                                    emailInput.setError("Email is already registered as a recruiter");
+                                                    emailInput.requestFocus();
+                                                } else {
+                                                    // If email does not exist in either node, proceed with user registration
+                                                    proceedWithSignUp(view);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                // Handle errors during the recruiter email check
+                                                Toast.makeText(view.getContext(), "Error checking recruiter email. Please try again.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            // Handle errors during the email check
-                            Toast.makeText(view.getContext(), "Error checking email existence. Please try again.", Toast.LENGTH_SHORT).show();
+                            // Handle errors during the jobseeker email check
+                            Toast.makeText(view.getContext(), "Error checking jobseeker email. Please try again.", Toast.LENGTH_SHORT).show();
                         }
                     });
         }

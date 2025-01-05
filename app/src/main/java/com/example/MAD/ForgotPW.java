@@ -160,6 +160,7 @@ public class ForgotPW extends AppCompatActivity {
         });
     }
 
+
     /**
      * Handles a found user by generating and sending a verification code.
      *
@@ -170,8 +171,8 @@ public class ForgotPW extends AppCompatActivity {
         String verificationCode = generateVerificationCode();
         sendChangePasswordVerificationCode(userEmail.replace("_", "."), verificationCode);
 
-        // Show the dialog with the verification code
-        showVerificationCodeDialog(verificationCode);
+        // Show the dialog with the verification code and pass the user type
+        showVerificationCodeDialog(verificationCode, userType);
     }
 
     /**
@@ -201,7 +202,6 @@ public class ForgotPW extends AppCompatActivity {
                     String name = snapshot.child("name").getValue(String.class);
                     sendEmail(name, email, verificationCode);
                 } else {
-                    // Check "recruiter" path if not found in "jobseeker"
                     reference.child("recruiter").child(userEmailKey).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -209,7 +209,6 @@ public class ForgotPW extends AppCompatActivity {
                                 String name = snapshot.child("name").getValue(String.class);
                                 sendEmail(name, email, verificationCode);
                             } else {
-                                // Fallback to default name if user record not found
                                 sendEmail("User", email, verificationCode);
                             }
                         }
@@ -294,7 +293,7 @@ public class ForgotPW extends AppCompatActivity {
      *
      * @param verificationCode The verification code.
      */
-    private void showVerificationCodeDialog(String verificationCode) {
+    private void showVerificationCodeDialog(String verificationCode, String userType) {
         LayoutInflater inflater = getLayoutInflater();
         View customView = inflater.inflate(R.layout.changepw_confirmation_layout, null);
 
@@ -316,8 +315,8 @@ public class ForgotPW extends AppCompatActivity {
             } else {
                 dialog.dismiss(); // Dismiss the current dialog
 
-                // Show the change password dialog
-                showChangePasswordDialog();
+                // Show the change password dialog and pass the user type
+                showChangePasswordDialog(userType);
             }
         });
 
@@ -333,7 +332,7 @@ public class ForgotPW extends AppCompatActivity {
     private android.app.AlertDialog changePasswordDialog;
     private android.app.AlertDialog successDialog;
 
-    private void showChangePasswordDialog() {
+    private void showChangePasswordDialog(String userType) {
         LayoutInflater inflater = getLayoutInflater();
         View changePasswordView = inflater.inflate(R.layout.changepw_layout, null);
 
@@ -365,7 +364,7 @@ public class ForgotPW extends AppCompatActivity {
                 confirmPasswordInput.requestFocus();
             } else {
                 // Proceed with password change (e.g., update in the database)
-                changePassword(newPassword);
+                changePassword(newPassword, userType); // Pass the user type here
                 dismissDialog(changePasswordDialog); // Dismiss the current dialog
                 showSuccessDialog(); // Show the success dialog
             }
@@ -457,26 +456,17 @@ public class ForgotPW extends AppCompatActivity {
         passwordInput.setSelection(passwordInput.getText().length());
     }
 
-    private void changePassword(String newPassword) {
+    private void changePassword(String newPassword, String userType) {
         String hashedPassword = hashPassword(newPassword); // Hash the password
-        String userEmailKey = emailInput.getText().toString().trim().replace(".", "_");
+        String userEmailKey = emailInput.getText().toString().trim().toLowerCase().replace(".", "_");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
 
-        // Attempt to update the password in "jobseeker" path
-        reference.child("jobseeker").child(userEmailKey).child("password").setValue(hashedPassword)
+        // Update the password based on the user type
+        reference.child(userType).child(userEmailKey).child("password").setValue(hashedPassword)
                 .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        // If not successful in "jobseeker", try "recruiter"
-                        reference.child("recruiter").child(userEmailKey).child("password").setValue(hashedPassword)
-                                .addOnCompleteListener(subTask -> {
-                                    if (!subTask.isSuccessful()) {
-                                        Toast.makeText(ForgotPW.this, "Failed to update password. Please try again.", Toast.LENGTH_SHORT).show();
-                                    } else {
-
-                                    }
-                                });
+                    if (task.isSuccessful()) {
                     } else {
-
+                        Toast.makeText(ForgotPW.this, "Failed to update password. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
