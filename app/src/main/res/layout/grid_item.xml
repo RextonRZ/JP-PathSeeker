@@ -41,14 +41,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imageview"
                 android:layout_centerHorizontal="true"
+                android:fontFamily="@font/judson"
                 android:gravity="center"
                 android:padding="0dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text="Olivia Rose"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/judson"/>
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/description"
@@ -56,11 +56,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textview"
                 android:layout_centerHorizontal="true"
+                android:fontFamily="@font/judson"
                 android:gravity="center"
                 android:text="Mentor in Leadership"
                 android:textColor="#808080"
-                android:textSize="12sp"
-                android:fontFamily="@font/judson"/>
+                android:textSize="11sp" />
 
         </RelativeLayout>
 

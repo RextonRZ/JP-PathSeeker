@@ -67,6 +67,11 @@ public class CareerMain_Fragment extends Fragment {
         CardView healthCard = view.findViewById(R.id.healthCard);
         healthCard.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_careerMain_to_articleFragment));
 
+        CardView mentorCard = view.findViewById(R.id.mentorCard);
+        mentorCard.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_careerMain_to_mentorshipFragment));
+
+        CardView forumCard = view.findViewById(R.id.forumCard);
+        forumCard.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_careerMain_to_forumFragment));
         return view;
     }
 }

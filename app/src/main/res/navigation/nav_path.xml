@@ -21,6 +21,12 @@
         <action
             android:id="@+id/action_careerMain_to_articleFragment"
             app:destination="@id/articleFragment" />
+        <action
+            android:id="@+id/action_careerMain_to_mentorshipFragment"
+            app:destination="@id/mentorshipFragment" />
+        <action
+            android:id="@+id/action_careerMain_to_forumFragment"
+            app:destination="@id/forumFragment" />
     </fragment>
 
     <fragment
@@ -49,5 +55,12 @@
             android:id="@+id/action_healthFragment_to_articleFragment"
             app:destination="@id/articleFragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/mentorshipFragment"
+        android:name="com.example.MAD.MentorshipFragment"
+        android:label="mentorshipFragment" />
+    <fragment
+        android:id="@+id/forumFragment"
+        android:name="com.example.MAD.ForumFragment"
+        android:label="forumFragment" />
 </navigation>
