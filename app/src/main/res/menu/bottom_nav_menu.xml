@@ -2,20 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/home"
-        android:title="Home" />
+        android:title="Home"
+        android:contentDescription="Go to Home" />
+
     <item
-        android:id="@+id/nav_search"
+        android:id="@+id/searchFragment"
         android:icon="@drawable/search"
-        android:title="Search" />
+        android:title="Search"
+        android:contentDescription="Search Content" />
+
     <item
-        android:id="@+id/nav_career"
+        android:id="@+id/careerFragment"
         android:icon="@drawable/careerresources"
-        android:title="CareerResources" />
+        android:title="Career Resources"
+        android:contentDescription="View Career Resources" />
+
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/profile"
-        android:title="Profile" />
+        android:title="Profile"
+        android:contentDescription="Go to Profile" />
 
 </menu>
