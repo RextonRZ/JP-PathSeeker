@@ -7,7 +7,14 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.MAD.AppHome_Fragment"
-        tools:layout="@layout/fragment_app_home" />
+        tools:layout="@layout/fragment_app_home">
+    <action
+        android:id="@+id/action_homeFragment_to_forumFragment"
+        app:destination="@id/forumFragment" />
+    <action
+        android:id="@+id/action_homeFragment_to_mentorshipFragment"
+        app:destination="@id/mentorshipFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"

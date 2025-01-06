@@ -14,6 +14,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AppHomePage extends AppCompatActivity {
 
+    private NavController navController;
+    private BottomNavigationView bottomNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +47,8 @@ public class AppHomePage extends AppCompatActivity {
         args.putString("sector", sector);
 
         //Solved the click here click there problem
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-        NavController navController = Navigation.findNavController(this, R.id.fragment_container);
+        bottomNav = findViewById(R.id.bottom_nav);
+        navController = Navigation.findNavController(this, R.id.fragment_container);
 
         navController.setGraph(navController.getGraph(), args);
 
@@ -58,15 +61,37 @@ public class AppHomePage extends AppCompatActivity {
         // Setup the NavigationUI
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        // Add destination change listener
+        // Handle bottom navigation item selection
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            // Check which item was clicked and navigate accordingly
+            if (itemId == R.id.homeFragment) {
+                navController.navigate(R.id.homeFragment);
+                return true;
+            } else if (itemId == R.id.searchFragment) {
+                navController.navigate(R.id.searchFragment);
+                return true;
+            } else if (itemId == R.id.careerFragment) {
+                navController.navigate(R.id.careerFragment);
+                return true;
+            }else if (itemId == R.id.profileFragment) {
+                navController.navigate(R.id.profileFragment);
+                return true;
+            }
+            return false;
+        });
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             // Clear all selections first
             for (int i = 0; i < bottomNav.getMenu().size(); i++) {
                 bottomNav.getMenu().getItem(i).setChecked(false);
             }
 
-            // Check if we're in any career-related fragment
-            if (destination.getId() == R.id.careerFragment ||
+            // Check the appropriate bottom navigation item based on the current destination
+            if (destination.getId() == R.id.homeFragment) {
+                bottomNav.getMenu().findItem(R.id.homeFragment).setChecked(true);
+            } else if (destination.getId() == R.id.careerFragment ||
                     destination.getId() == R.id.mentorshipFragment ||
                     destination.getId() == R.id.articleFragment ||
                     destination.getId() == R.id.forumFragment ||
@@ -106,5 +131,18 @@ public class AppHomePage extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, homeFragment)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!navController.popBackStack()) {
+            // If we can't pop the back stack, handle it here
+            if (navController.getCurrentDestination().getId() != R.id.homeFragment) {
+                // If we're not on the home fragment, navigate to it
+                navController.navigate(R.id.homeFragment);
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 }
