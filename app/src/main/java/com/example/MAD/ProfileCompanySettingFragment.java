@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 public class ProfileCompanySettingFragment extends Fragment {
 
@@ -28,6 +29,12 @@ public class ProfileCompanySettingFragment extends Fragment {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        ImageButton btnBack = view.findViewById(R.id.btnBackCom);
+
+        btnBack.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigateUp();
         });
 
         Button BtnDeact = view.findViewById(R.id.BtnDeactCom);
@@ -45,14 +52,6 @@ public class ProfileCompanySettingFragment extends Fragment {
             public void onClick(View v) {
                 // Show custom dialog
                 showLogOutDialog();
-            }
-        });
-
-        ImageButton btnBack = view.findViewById(R.id.btnBackCom);
-
-        btnBack.setOnClickListener(v -> {
-            if (getParentFragmentManager() != null) {
-                getParentFragmentManager().popBackStack();
             }
         });
 

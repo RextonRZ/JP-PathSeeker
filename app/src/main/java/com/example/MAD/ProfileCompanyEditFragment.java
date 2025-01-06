@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,9 +71,7 @@ public class ProfileCompanyEditFragment extends Fragment {
 
         ImageButton btnBackCom = rootView.findViewById(R.id.btnBackCom);
         btnBackCom.setOnClickListener(v -> {
-            if (getParentFragmentManager() != null) {
-                getParentFragmentManager().popBackStack();
-            }
+            Navigation.findNavController(rootView).navigateUp();
         });
 
 

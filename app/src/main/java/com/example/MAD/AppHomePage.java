@@ -124,7 +124,7 @@ public class AppHomePage extends AppCompatActivity {
         CareerMain_Fragment careerFragment = new CareerMain_Fragment();
         careerFragment.setArguments(args);
 
-        ProfileFragment profileFragment = new ProfileFragment();
+        ProfileIdentifyFragment profileFragment = new ProfileIdentifyFragment();
         profileFragment.setArguments(args);
 
         // Replace the initial fragment (e.g., AppHome_Fragment)
