@@ -222,7 +222,7 @@ public class Login extends AppCompatActivity {
         if (passwordFromDB != null && passwordFromDB.equals(hashPassword)) {
             // Extract normalized fields
             saveLoginState(email.getText().toString().trim(), password.getText().toString().trim());
-            String userEmail = userSnapshot.child(userType.equals("recruiter") ? "companyEmail" : "email").getValue(String.class);
+            String userEmail = userSnapshot.child(userType.equals("recruiter") ? "companyMail" : "email").getValue(String.class);
             String userName = userSnapshot.child(userType.equals("recruiter") ? "companyName" : "name").getValue(String.class);
 
             String dob = userType.equals("jobseeker") ? userSnapshot.child("dob").getValue(String.class) : null;
