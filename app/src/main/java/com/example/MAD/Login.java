@@ -2,8 +2,11 @@ package com.example.MAD;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +43,11 @@ public class Login extends AppCompatActivity {
 
     TextView userName;
 
+    CheckBox rmbMeCheckBox; // Remember Me Checkbox
+
+    private static final String PREFS_NAME = "LoginPrefs";
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +65,13 @@ public class Login extends AppCompatActivity {
         email = findViewById(R.id.emailInput);
         password = findViewById(R.id.passwordInput);
         loginBtn = findViewById(R.id.loginBtn);
+        rmbMeCheckBox = findViewById(R.id.RmbMeCheckBox);
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        // Load saved login state
+        loadSavedLoginState();
         initializePasswordVisibility(password);
 
         TextView forgotPW = findViewById(R.id.forgotPW);
@@ -111,6 +127,31 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    private void loadSavedLoginState() {
+        // Check if email and password are saved
+        String savedEmail = sharedPreferences.getString("email", "");
+        String savedPassword = sharedPreferences.getString("password", "");
+
+        if (!savedEmail.isEmpty() && !savedPassword.isEmpty()) {
+            // Pre-fill the login fields
+            email.setText(savedEmail);
+            password.setText(savedPassword);
+            rmbMeCheckBox.setChecked(true); // Set the checkbox as checked
+        }
+    }
+
+    private void saveLoginState(String email, String password) {
+        // Save email and password if Remember Me is checked
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (rmbMeCheckBox.isChecked()) {
+            editor.putString("email", email);
+            editor.putString("password", password);
+        } else {
+            editor.clear(); // Clear saved login state if Remember Me is unchecked
+        }
+        editor.apply(); // Apply changes
+    }
+
     public Boolean validateEmail(){
         String val = email.getText().toString();
         if(val.isEmpty()){
@@ -132,30 +173,27 @@ public class Login extends AppCompatActivity {
     }
 
     public void checkUser() {
-        String userEmail = email.getText().toString().trim().toLowerCase().replace(".", "_"); // Convert to lowercase
+        String userEmail = email.getText().toString().trim().toLowerCase().replace(".", "_");
         String userPassword = password.getText().toString().trim();
         String hashPassword = hashPassword(userPassword);
 
         Log.d("LoginDebug", "Checking user: " + userEmail);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        Query query = reference.child("jobseeker").child(userEmail);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        // First, check if the user is a jobseeker
+        reference.child("jobseeker").child(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("LoginDebug", "Jobseeker exists: " + snapshot.exists());
                 if (snapshot.exists()) {
-                    validateCredentials(snapshot, hashPassword);
+                    handleUserAuthentication(snapshot, hashPassword, "jobseeker");
                 } else {
-                    Log.d("LoginDebug", "Jobseeker not found, checking recruiter...");
-                    Query recruiterQuery = reference.child("recruiter").child(userEmail);
-                    recruiterQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    // If not found, check if the user is a recruiter
+                    reference.child("recruiter").child(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Log.d("LoginDebug", "Recruiter exists: " + snapshot.exists());
                             if (snapshot.exists()) {
-                                validateCredentials(snapshot, hashPassword);
+                                handleUserAuthentication(snapshot, hashPassword, "recruiter");
                             } else {
                                 Log.d("LoginDebug", "User not found in both categories");
                                 email.setError("User does not exist");
@@ -176,6 +214,33 @@ public class Login extends AppCompatActivity {
                 Log.e("LoginDebug", "Error checking jobseeker: " + error.getMessage());
             }
         });
+    }
+
+    private void handleUserAuthentication(DataSnapshot userSnapshot, String hashPassword, String userType) {
+        String passwordFromDB = userSnapshot.child("password").getValue(String.class);
+
+        if (passwordFromDB != null && passwordFromDB.equals(hashPassword)) {
+            // Extract normalized fields
+            saveLoginState(email.getText().toString().trim(), password.getText().toString().trim());
+            String userEmail = userSnapshot.child(userType.equals("recruiter") ? "companyEmail" : "email").getValue(String.class);
+            String userName = userSnapshot.child(userType.equals("recruiter") ? "companyName" : "name").getValue(String.class);
+
+            String dob = userType.equals("jobseeker") ? userSnapshot.child("dob").getValue(String.class) : null;
+            String workingStatus = userType.equals("jobseeker") ? userSnapshot.child("workingStatus").getValue(String.class) : null;
+            String sector = userType.equals("recruiter") ? userSnapshot.child("sector").getValue(String.class) : null;
+
+            // Pass all data to the next activity via Intent
+            Intent intent = new Intent(Login.this, AppHomePage.class);
+            intent.putExtra("userEmail", userEmail); // Unified email field
+            intent.putExtra("userName", userName);   // Unified name field
+            intent.putExtra("dob", dob);             // Jobseeker-specific
+            intent.putExtra("workingStatus", workingStatus); // Jobseeker-specific
+            intent.putExtra("sector", sector);       // Recruiter-specific
+            startActivity(intent);
+        } else {
+            password.setError("Invalid credentials");
+            password.requestFocus();
+        }
     }
 
 
@@ -210,20 +275,20 @@ public class Login extends AppCompatActivity {
             String userType = userSnapshot.getRef().getParent().getKey(); // Check if it's 'jobseeker' or 'recruiter'
 
             String name;
+            String userEmail; // Store the email retrieved from the database
+
             if ("recruiter".equals(userType)) {
                 name = userSnapshot.child("companyName").getValue(String.class); // Recruiter uses companyName
-                String sector = userSnapshot.child("sector").getValue(String.class);
-
+                userEmail = userSnapshot.child("companyMail").getValue(String.class); // Recruiter email is stored in 'companyMail'
             } else {
                 name = userSnapshot.child("name").getValue(String.class); // Jobseeker uses name
-                String dob = userSnapshot.child("dob").getValue(String.class);
-                String email = userSnapshot.child("email").getValue(String.class);
-                String workingStatus = userSnapshot.child("workingStatus").getValue(String.class);
+                userEmail = userSnapshot.child("email").getValue(String.class); // Jobseeker email is stored in 'email'
             }
 
-
+            // Create an intent and pass the email
             Intent intent = new Intent(Login.this, AppHomePage.class);
             intent.putExtra("userName", name); // Pass the username or companyName
+            intent.putExtra("email", userEmail); // Pass the email or companyMail
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {

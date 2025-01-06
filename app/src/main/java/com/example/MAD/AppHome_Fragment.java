@@ -1,37 +1,24 @@
 package com.example.MAD;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
+import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.cardview.widget.CardView;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
-
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AppHome_Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AppHome_Fragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private ImageSlider imageSlider;
-
     private TextView userNameTextView;
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -39,15 +26,6 @@ public class AppHome_Fragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AppHome_Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static AppHome_Fragment newInstance(String param1, String param2) {
         AppHome_Fragment fragment = new AppHome_Fragment();
         Bundle args = new Bundle();
@@ -69,7 +47,6 @@ public class AppHome_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the fragment layout
         View view = inflater.inflate(R.layout.fragment_app_home, container, false);
 
         // Initialize the ImageSlider
@@ -85,17 +62,37 @@ public class AppHome_Fragment extends Fragment {
         // Set the image list for the slider
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
 
-        // Retrieve the username from the bundle
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String userName = bundle.getString("userName");
+        userNameTextView = view.findViewById(R.id.userName);
 
-            // Display the username in the TextView
-            userNameTextView = view.findViewById(R.id.userName);
-            if (userName != null) {
-                userNameTextView.setText(userName);
+        // Get username from UserSessionManager first
+        String savedUserName = UserSessionManager.getInstance().getUserName();
+
+        // If not in UserSessionManager, try to get from arguments
+        if (savedUserName == null || savedUserName.isEmpty()) {
+            Bundle args = getArguments();
+            if (args != null) {
+                savedUserName = args.getString("userName");
+                // Save to UserSessionManager for future use
+                if (savedUserName != null) {
+                    UserSessionManager.getInstance().setUserName(savedUserName);
+                }
             }
         }
+
+        // Set the username
+        userNameTextView.setText(savedUserName != null ? savedUserName : "No Name");
+
+        // Initialize card1 and set click listener
+        CardView card1 = view.findViewById(R.id.card1);
+        card1.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_forumFragment);
+        });
+
+        // Initialize card3 and set click listener
+        CardView card3 = view.findViewById(R.id.card3);
+        card3.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_mentorshipFragment);
+        });
 
         return view;
     }
