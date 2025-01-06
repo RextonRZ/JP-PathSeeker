@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +20,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class ProfileSeekerSettingFragment extends Fragment {
+
+    TextView emailSettingSeeker, DOBSettingSeeker;
 
     @Nullable
     @Override
@@ -32,11 +39,19 @@ public class ProfileSeekerSettingFragment extends Fragment {
             return insets;
         });
 
+            emailSettingSeeker = view.findViewById(R.id.emailSettingSeeker);
+            emailSettingSeeker.setText(UserSessionManager.getInstance().getUserEmail());
+
+            DOBSettingSeeker = view.findViewById(R.id.DOBSettingSeeker);
+            DOBSettingSeeker.setText(UserSessionManager.getInstance().getDob());
+
+
         Button BtnDeact = view.findViewById(R.id.BtnDeact);
         BtnDeact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDeactivateDialog();
+
             }
         });
 
@@ -57,7 +72,8 @@ public class ProfileSeekerSettingFragment extends Fragment {
             }
         });
 
-        return view;
+
+            return view;
     }
 
     private void showDeactivateDialog() {
@@ -67,6 +83,30 @@ public class ProfileSeekerSettingFragment extends Fragment {
 
         Button BtnConfirm = dialog.findViewById(R.id.BtnSave);
         BtnConfirm.setText("Deactivate");
+        BtnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ensure userEmail is not null before sanitizing
+                String userEmail = UserSessionManager.getInstance().getUserEmail();
+                if (userEmail != null && !userEmail.isEmpty()) {
+                    String sanitizedEmail = userEmail.replace(".", "_");
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("jobseeker").child(sanitizedEmail);
+                    // Delete the user data from the database
+                    userRef.removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            dialog.dismiss();
+                            // Navigate to a login or welcome screen (if needed)
+                            navigateToLoginScreen();
+                            Toast.makeText(requireContext(), "Account is succesfully deactivated.", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            // Handle failure to delete
+                            Toast.makeText(requireContext(), "Failed to deactivate account. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
 
         TextView confirmMessage = dialog.findViewById(R.id.confirmMessage);
         confirmMessage.setText("Permanently delete your account?\nYour account data won’t be recovered.");
@@ -80,6 +120,12 @@ public class ProfileSeekerSettingFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+
+    }
+
+    private void navigateToLoginScreen() {
+        Intent intent = new Intent(requireContext(), Login.class); // Change to your login activity
+        startActivity(intent);
     }
 
     private void showLogOutDialog() {
@@ -116,8 +162,9 @@ public class ProfileSeekerSettingFragment extends Fragment {
                     @Override
                     public void run() {
                         dialog.dismiss();
+                        navigateToLoginScreen();
                     }
-                }, 2000);
+                }, 1000);
             }
         });
     }
