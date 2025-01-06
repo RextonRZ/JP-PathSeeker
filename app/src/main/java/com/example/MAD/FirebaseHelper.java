@@ -29,7 +29,7 @@ public class FirebaseHelper {
     }
 
     public FirebaseHelper() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app");
         databaseReference = database.getReference("mentors");  // Keep original reference
         mentorsRef = database.getReference("mentors");
         bookedSlotsRef = database.getReference("bookedSlots");
@@ -77,8 +77,6 @@ public class FirebaseHelper {
         }
     }
 
-
-    // Keep your original fetchMentors method
     public void fetchMentors(DataCallback callback) {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -170,35 +168,6 @@ public class FirebaseHelper {
 
     private ValueEventListener articlesListener;
 
-    public void startArticleRealTimeUpdates(ArticleCallback callback) {
-        if (articlesListener != null) {
-            removeArticleListener();
-        }
-
-        articlesListener = articlesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                List<Article> articles = new ArrayList<>();
-
-                for (DataSnapshot articleSnapshot : snapshot.getChildren()) {
-                    if (articleSnapshot.getValue() == null) continue;
-
-                    Article article = articleSnapshot.getValue(Article.class);
-                    if (article != null) {
-                        articles.add(article);
-                    }
-                }
-
-                callback.onSuccess(articles);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                callback.onFailure(error.toException());
-            }
-        });
-    }
-
     public void removeArticleListener() {
         if (articlesListener != null) {
             articlesRef.removeEventListener(articlesListener);
@@ -206,16 +175,38 @@ public class FirebaseHelper {
         }
     }
 
+    private String getCurrentUserEmail() {
+        return UserSessionManager.getInstance().getUserEmail();
+    }
+
+    // Update the bookSlot method to use getCurrentUserEmail()
     public void bookSlot(String mentorId, String date, String timeSlot, String userEmail, DataCallback callback) {
+        Log.d("FirebaseHelper", "Starting bookSlot with mentorId: " + mentorId + ", date: " + date + ", timeSlot: " + timeSlot + ", userEmail: " + userEmail);
+
+        final String finalUserEmail;
+        if (userEmail == null || userEmail.isEmpty()) {
+            finalUserEmail = UserSessionManager.getInstance().getUserEmail();
+            Log.d("FirebaseHelper", "Got email from UserSessionManager: " + finalUserEmail);
+            if (finalUserEmail == null) {
+                callback.onFailure(new Exception("User not logged in"));
+                return;
+            }
+        } else {
+            finalUserEmail = userEmail;
+        }
+
         // Parse the date
         String[] dateParts = date.split("/");
         String day = dateParts[0].trim();
         String month = dateParts[1].trim();
         String year = dateParts[2].trim();
 
+        Log.d("FirebaseHelper", "Parsed date - day: " + day + ", month: " + month + ", year: " + year);
+
         // First check all bookings for the same date and time slot
         bookedSlotsRef.get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
+                Log.e("FirebaseHelper", "Failed to check existing bookings", task.getException());
                 callback.onFailure(task.getException());
                 return;
             }
@@ -242,7 +233,7 @@ public class FirebaseHelper {
                             BookingData bookingData = timeSlotSnap.getValue(BookingData.class);
                             if (bookingData != null &&
                                     bookingData.isBooked() &&
-                                    bookingData.getUserEmail().equals(userEmail)) {
+                                    bookingData.getUserEmail().equals(finalUserEmail)) {
                                 hasConflict = true;
                                 conflictReason = "You already have a booking with this mentor on the selected date";
                                 break;
@@ -260,7 +251,7 @@ public class FirebaseHelper {
                         BookingData bookingData = timeSlotSnap.getValue(BookingData.class);
                         if (bookingData != null &&
                                 bookingData.isBooked() &&
-                                bookingData.getUserEmail().equals(userEmail)) {
+                                bookingData.getUserEmail().equals(finalUserEmail)) {
                             hasConflict = true;
                             conflictReason = "You already have a booking with another mentor at this time";
                             break;
@@ -276,7 +267,6 @@ public class FirebaseHelper {
                 return;
             }
 
-            // If no conflicts, proceed with booking
             DatabaseReference bookingRef = bookedSlotsRef
                     .child(mentorId)
                     .child(year)
@@ -284,86 +274,20 @@ public class FirebaseHelper {
                     .child(day)
                     .child(timeSlot);
 
-            BookingData bookingData = new BookingData(userEmail, true);
+            Log.d("FirebaseHelper", "Writing to Firebase path: " + bookingRef.toString());
+
+            BookingData bookingData = new BookingData(finalUserEmail, true);
+            Log.d("FirebaseHelper", "Booking data: " + bookingData.getUserEmail() + ", " + bookingData.isBooked());
 
             bookingRef.setValue(bookingData)
-                    .addOnSuccessListener(aVoid -> callback.onSuccess(null))
-                    .addOnFailureListener(callback::onFailure);
-        });
-    }
-
-    public void checkExistingBooking(String mentorId, String userEmail, String date, String timeSlot, DataCallback callback) {
-        bookedSlotsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                try {
-                    // Parse the date
-                    String[] dateParts = date.split("/");
-                    String day = dateParts[0].trim();
-                    String month = dateParts[1].trim();
-                    String year = dateParts[2].trim();
-
-                    // Flag to track if any conflicts are found
-                    boolean hasConflict = false;
-                    String conflictReason = "";
-
-                    // Check all mentors for the specific date and time
-                    for (DataSnapshot mentorSnapshot : task.getResult().getChildren()) {
-                        String currentMentorId = mentorSnapshot.getKey();
-
-                        DataSnapshot yearSnapshot = mentorSnapshot.child(year);
-                        if (yearSnapshot.exists()) {
-                            DataSnapshot monthSnapshot = yearSnapshot.child(month);
-                            if (monthSnapshot.exists()) {
-                                DataSnapshot daySnapshot = monthSnapshot.child(day);
-                                if (daySnapshot.exists()) {
-                                    // Check for same-day booking with the same mentor
-                                    if (currentMentorId.equals(mentorId)) {
-                                        for (DataSnapshot timeSlotSnapshot : daySnapshot.getChildren()) {
-                                            Object value = timeSlotSnapshot.getValue();
-                                            if (value instanceof BookingData) {
-                                                BookingData bookingData = timeSlotSnapshot.getValue(BookingData.class);
-                                                if (bookingData != null &&
-                                                        bookingData.isBooked() &&
-                                                        bookingData.getUserEmail().equals(userEmail)) {
-                                                    hasConflict = true;
-                                                    conflictReason = "You already have a booking with this mentor on the selected date";
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    // Check for time slot conflict with any mentor
-                                    DataSnapshot specificTimeSlot = daySnapshot.child(timeSlot);
-                                    if (specificTimeSlot.exists()) {
-                                        Object value = specificTimeSlot.getValue();
-                                        if (value instanceof BookingData) {
-                                            BookingData bookingData = specificTimeSlot.getValue(BookingData.class);
-                                            if (bookingData != null &&
-                                                    bookingData.isBooked() &&
-                                                    bookingData.getUserEmail().equals(userEmail)) {
-                                                hasConflict = true;
-                                                conflictReason = "You already have a booking with another mentor at this time";
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (hasConflict) {
-                        callback.onFailure(new Exception(conflictReason));
-                    } else {
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("FirebaseHelper", "Successfully wrote booking to Firebase");
                         callback.onSuccess(null);
-                    }
-                } catch (Exception e) {
-                    callback.onFailure(new Exception("Error checking booking conflicts: " + e.getMessage()));
-                }
-            } else {
-                callback.onFailure(task.getException());
-            }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("FirebaseHelper", "Failed to write booking to Firebase", e);
+                        callback.onFailure(e);
+                    });
         });
     }
 
@@ -426,7 +350,7 @@ public class FirebaseHelper {
         private boolean booked;
 
         public BookingData() {
-            // Required empty constructor for Firebase
+            // Default constructor required for calls to DataSnapshot.getValue(BookingData.class)
         }
 
         public BookingData(String userEmail, boolean booked) {
@@ -435,8 +359,6 @@ public class FirebaseHelper {
         }
 
         public String getUserEmail() { return userEmail; }
-        public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
         public boolean isBooked() { return booked; }
-        public void setBooked(boolean booked) { this.booked = booked; }
     }
 }

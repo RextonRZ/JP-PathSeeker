@@ -26,7 +26,6 @@ public class CalendarFragment extends Fragment {
     private TextView bookedInfoTextView;
     private DatabaseReference databaseReference;
     private static final String TAG = "CalendarFragment";
-    String currentUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,15 +34,11 @@ public class CalendarFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
         bookedInfoTextView = view.findViewById(R.id.bookedInfoTextView);
 
-        if (getArguments() != null) {
-            currentUser = getArguments().getString("userEmail");
-        }
-
         ImageView backIcon = view.findViewById(R.id.back_icon);
         backIcon.setOnClickListener(v -> requireActivity().onBackPressed());
 
         // Get reference to the root of the database
-        databaseReference = FirebaseDatabase.getInstance("https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app/")
+        databaseReference = FirebaseDatabase.getInstance("https://pathseeker-40c02-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -64,7 +59,18 @@ public class CalendarFragment extends Fragment {
         return view;
     }
 
+    private String getCurrentUserEmail() {
+        return UserSessionManager.getInstance().getUserEmail();
+    }
+
+    // Update the fetchBookedSlots method
     private void fetchBookedSlots(String day, String month, String year) {
+        String userEmail = getCurrentUserEmail();
+        if (userEmail == null) {
+            bookedInfoTextView.setText("Please log in to view your bookings");
+            return;
+        }
+
         Log.d(TAG, "Fetching booked slots for date: " + day + "/" + month + "/" + year);
 
         databaseReference.child("bookedSlots").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -97,7 +103,7 @@ public class CalendarFragment extends Fragment {
                                                     timeSlotSnapshot.getValue(FirebaseHelper.BookingData.class);
                                             isUserBooking = bookingData != null &&
                                                     bookingData.isBooked() &&
-                                                    bookingData.getUserEmail().equals(currentUser);
+                                                    bookingData.getUserEmail().equals(userEmail);
                                         }
 
                                         if (isUserBooking) {

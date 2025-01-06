@@ -27,6 +27,9 @@ public class AppHomePage extends AppCompatActivity {
         String workingStatus = intent.getStringExtra("workingStatus");
         String sector = intent.getStringExtra("sector");
 
+        //++++++++++++ LINKED MAIL DE +++++++++++++++++ Initialize UserSessionManager
+        UserSessionManager.getInstance().setUserEmail(userEmail);
+
         // Prepare the Bundle
         Bundle args = new Bundle();
         args.putString("userEmail", userEmail);
@@ -35,7 +38,7 @@ public class AppHomePage extends AppCompatActivity {
         args.putString("workingStatus", workingStatus);
         args.putString("sector", sector);
 
-        ///////////////////// Solved the click here click there problem
+        //Solved the click here click there problem
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavController navController = Navigation.findNavController(this, R.id.fragment_container);
 
