@@ -46,6 +46,8 @@ dependencies {
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.google.firebase:firebase-database:20.3.0")
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
@@ -56,6 +58,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.8.5")
     implementation("androidx.navigation:navigation-ui:2.8.5")
     implementation("com.google.firebase:firebase-database:21.0.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+
     // Testing dependencies
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
