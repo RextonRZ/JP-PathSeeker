@@ -29,6 +29,11 @@ public class AppHomePage extends AppCompatActivity {
 
         //++++++++++++ LINKED MAIL DE +++++++++++++++++ Initialize UserSessionManager
         UserSessionManager.getInstance().setUserEmail(userEmail);
+        UserSessionManager.getInstance().setUserName(userName);
+        UserSessionManager.getInstance().setDob(dob);
+        UserSessionManager.getInstance().setWorkingStatus(workingStatus);
+        UserSessionManager.getInstance().setSector(sector);
+
 
         // Prepare the Bundle
         Bundle args = new Bundle();

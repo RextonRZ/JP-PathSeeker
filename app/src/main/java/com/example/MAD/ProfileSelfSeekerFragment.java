@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,22 +52,20 @@ public class ProfileSelfSeekerFragment extends Fragment {
         ImageButton btnSetting = view.findViewById(R.id.btnSetting2);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile3);
 
-        // Set click listeners
-//        btnSetting.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(requireContext(), SettingSeeker.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(requireContext(), EditProfileSeeker.class);
-//                startActivity(intent);
-//            }
-//        });
+         //Set click listeners
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.seekerSettingFragment);
+            }
+        });
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.seekerEditFragment);
+            }
+        });
 
         // Initialize RecyclerView for Skills
         RVSkill = view.findViewById(R.id.RVSkill);

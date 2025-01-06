@@ -72,4 +72,58 @@
         android:id="@+id/forumFragment"
         android:name="com.example.MAD.ForumFragment"
         android:label="forumFragment" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.MAD.ProfileIdentifyFragment"
+        android:label="profileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_selfSeekerFragment"
+            app:destination="@id/selfSeekerFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_selfCompanyFragment"
+            app:destination="@id/selfCompanyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selfSeekerFragment"
+        android:name="com.example.MAD.ProfileSelfSeekerFragment"
+        android:label="selfSeekerFragment" />
+
+    <fragment
+        android:id="@+id/selfCompanyFragment"
+        android:name="com.example.MAD.ProfileSelfCompanyFragment"
+        android:label="selfCompanyFragment" />
+
+    <fragment
+        android:id="@+id/companyEditFragment"
+        android:name="com.example.MAD.ProfileCompanyEditFragment"
+        android:label="companyEditFragment" />
+
+    <fragment
+        android:id="@+id/seekerEditFragment"
+        android:name="com.example.MAD.ProfileSeekerEditFragment"
+        android:label="seekerEditFragment" />
+
+    <fragment
+        android:id="@+id/seekerSettingFragment"
+        android:name="com.example.MAD.ProfileSeekerSettingFragment"
+        android:label="seekerSettingFragment" />
+
+    <fragment
+        android:id="@+id/companySettingFragment"
+        android:name="com.example.MAD.ProfileCompanySettingFragment"
+        android:label="companySettingFragment" />
+
+    <fragment
+        android:id="@+id/companyViewRateFragment"
+        android:name="com.example.MAD.ProfileCompanyViewRateFragment"
+        android:label="companyViewRateFragment" />
+
+    <fragment
+        android:id="@+id/seekerViewRateFragment"
+        android:name="com.example.MAD.ProfileSeekerViewRateFragment"
+        android:label="seekerViewRateFragment" />
+
+
 </navigation>

@@ -69,11 +69,12 @@ public class ProfileCompanyEditFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         ImageButton btnBackCom = rootView.findViewById(R.id.btnBackCom);
-//        btnBackCom.setOnClickListener(v -> {
-//            // Navigate to the ProfileSelfCompany activity
-//            Intent intent = new Intent(requireContext(), ProfileSelfCompany.class);
-//            startActivity(intent);
-//        });
+        btnBackCom.setOnClickListener(v -> {
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().popBackStack();
+            }
+        });
+
 
         initializeViews();
         checkForExistingProfilePhoto();

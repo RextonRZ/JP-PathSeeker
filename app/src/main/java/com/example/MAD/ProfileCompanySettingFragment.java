@@ -50,11 +50,9 @@ public class ProfileCompanySettingFragment extends Fragment {
 
         ImageButton btnBack = view.findViewById(R.id.btnBackCom);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigate back to the previous fragment or activity
-                requireActivity().onBackPressed();
+        btnBack.setOnClickListener(v -> {
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().popBackStack();
             }
         });
 

@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,28 +45,23 @@ public class ProfileSelfCompanyFragment extends Fragment {
             return insets;
         });
 
-        ImageButton btnSetting = view.findViewById(R.id.btnSetting);
+        ImageButton btnSetting = view.findViewById(R.id.btnSettingCompany);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile2);
 
         // Set an OnClickListener to navigate when clicked
-//        btnSetting.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Navigate to the Settings fragment or activity
-//                // Replace with navigation logic if using Navigation Component
-//                Intent intent = new Intent(getActivity(), SettingCompany.class);
-//                startActivity(intent);
-//            }
-//        });
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.companySettingFragment);
+            }
+        });
 
-//        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Navigate to the Edit Profile fragment or activity
-//                Intent intent = new Intent(getActivity(), EditProfileCompany.class);
-//                startActivity(intent);
-//            }
-//        });
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.companyEditFragment);
+            }
+        });
 
         // Initialize RecyclerView
         RVJob = view.findViewById(R.id.RVJob);
