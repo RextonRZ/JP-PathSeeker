@@ -63,4 +63,7 @@ dependencies {
 
     implementation ("com.google.android.gms:play-services-auth:21.3.0")
     implementation ("com.google.firebase:firebase-auth:22.0.3")
+
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 }

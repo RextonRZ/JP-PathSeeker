@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_searchFragment_to_partnershipProgramFragment"
             app:destination="@id/partnershipProgramFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment" />
     </fragment>
 
     <fragment
@@ -153,5 +156,10 @@
         android:id="@+id/partnershipProgramFragment"
         android:name="com.example.MAD.PartnershipProgramFragment"
         android:label="partnershipProgramFragment" />
+
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.example.MAD.EventsFragment"
+        android:label="eventsFragment" />
 
 </navigation>
