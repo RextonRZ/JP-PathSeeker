@@ -102,9 +102,18 @@ public class AppHomePage extends AppCompatActivity {
                 bottomNav.getMenu().findItem(R.id.careerFragment).setChecked(true);
             } else if(destination.getId()==R.id.searchFragment||
                     destination.getId() == R.id.courseFragment||
+                    destination.getId() == R.id.partnershipProgramFragment||
                     destination.getId() == R.id.courseDetailsFragment){
                     bottomNav.getMenu().findItem(R.id.searchFragment).setChecked(true);
-
+            } else if(destination.getId()==R.id.profileFragment||
+                    destination.getId() == R.id.selfCompanyFragment||
+                    destination.getId() == R.id.selfSeekerFragment||
+                    destination.getId() == R.id.companyEditFragment||
+                    destination.getId() == R.id.seekerEditFragment||
+                    destination.getId() == R.id.seekerSettingFragment||
+                    destination.getId() == R.id.seekerViewRateFragment||
+                    destination.getId() == R.id.companyViewRateFragment){
+                bottomNav.getMenu().findItem(R.id.profileFragment).setChecked(true);
             }
 
             else {

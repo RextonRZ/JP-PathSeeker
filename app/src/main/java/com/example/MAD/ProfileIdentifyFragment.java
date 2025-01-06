@@ -64,7 +64,7 @@ public class ProfileIdentifyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_identify, container, false);
 
         view.post(() -> {
-            try {
+//            try {
                 String dob = getCurrentDOB();
                 Log.d("ProfileIdentifyFragment", "DOB value: " + dob);
                 if (dob != null && !dob.isEmpty()) {
@@ -72,9 +72,9 @@ public class ProfileIdentifyFragment extends Fragment {
                 } else {
                     Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_selfCompanyFragment);
                 }
-            } catch (Exception e) {
-                Log.e("ProfileIdentifyFragment", "Navigation error: " + e.getMessage());
-            }
+//            } catch (Exception e) {
+//                Log.e("ProfileIdentifyFragment", "Navigation error: " + e.getMessage());
+//            }
         });
 
         // Return the view

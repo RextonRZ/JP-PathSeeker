@@ -1,8 +1,12 @@
 package com.example.MAD;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +34,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class ProfileSelfSeekerFragment extends Fragment {
@@ -42,6 +50,8 @@ public class ProfileSelfSeekerFragment extends Fragment {
 
     TextView nameSelfSeeker, statusSelfSeeker, numExpSelf, bioSelfSeeker;
     ImageView profilePhotoSelf;
+
+    Button btnRetrievePDF2;
 
     @Nullable
     @Override
@@ -91,14 +101,18 @@ public class ProfileSelfSeekerFragment extends Fragment {
             statusSelfSeeker = view.findViewById(R.id.statusSelfSeeker);
             statusSelfSeeker.setText(UserSessionManager.getInstance().getWorkingStatus());
 
-            numExpSelf = view.findViewById(R.id.numExpSelf);
-            numExpSelf.setText(String.valueOf(expShowList.size()));
-
             bioSelfSeeker = view.findViewById(R.id.bioSelfSeeker);
             accessBio(userRef);
 
             profilePhotoSelf = view.findViewById(R.id.profilePhotoSelf);
             accessProfile(userRef);
+
+            btnRetrievePDF2 = view.findViewById(R.id.btnRetrievePDF2);
+            btnRetrievePDF2.setOnClickListener(v->retrievePDFFromDatabase(userRef));
+
+            numExpSelf = view.findViewById(R.id.numExpSelf);
+
+
         } else {
             Log.e("ProfileSelfSeekerFragment", "User email is null or empty.");
         }
@@ -158,6 +172,8 @@ public class ProfileSelfSeekerFragment extends Fragment {
                         }
 
                         adapter2.notifyDataSetChanged();
+                        numExpSelf.setText(String.valueOf(expShowList.size()));
+
                     } else {
                         Log.d("setUpExp", "No experience found for user.");
                     }
@@ -212,4 +228,81 @@ public class ProfileSelfSeekerFragment extends Fragment {
             }
         });
     }
+
+    private void retrievePDFFromDatabase(DatabaseReference userRef) {
+
+        // Reference to the user's 'resume' node in the database
+        DatabaseReference userPdfRef = userRef.child("resume");
+
+        // Get the data for the resume
+        userPdfRef.get().addOnSuccessListener(snapshot -> {
+            if (!snapshot.exists()) {
+                Toast.makeText(requireContext(), "No PDF found for this user", Toast.LENGTH_SHORT).show();
+            } else {
+                // Retrieve the base64-encoded PDF string and fileName
+                String base64EncodedPDF = snapshot.child("base64Pdf").getValue(String.class);
+                String fileName = snapshot.child("fileName").getValue(String.class);
+
+                if (base64EncodedPDF != null && fileName != null) {
+                    // Decode the base64 string to get the PDF bytes
+                    byte[] pdfBytes = Base64.decode(base64EncodedPDF, Base64.DEFAULT);
+
+                    // Download the PDF with the appropriate fileName
+                    downloadPDF(pdfBytes, fileName);
+                } else {
+                    Toast.makeText(requireContext(), "PDF data is incomplete", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(requireContext(), "Error retrieving PDF: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void downloadPDF(byte[] pdfBytes, String fileName) {
+        try {
+            // Check if we are on Android 10 (API 29) or later
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Use MediaStore to save the file in the Downloads folder (Scoped Storage for Android 10+)
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
+                values.put(MediaStore.Downloads.RELATIVE_PATH, "Download/");
+
+                Uri pdfUri = requireContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+
+                if (pdfUri != null) {
+                    // Open output stream to save the PDF file
+                    try (OutputStream outputStream = requireContext().getContentResolver().openOutputStream(pdfUri)) {
+                        if (outputStream != null) {
+                            outputStream.write(pdfBytes);
+                            Toast.makeText(requireContext(), "PDF downloaded successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(requireContext(), "Error downloading PDF", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                // For devices below Android 10, write to external storage directly
+                File downloadsFolder = new File(requireContext().getExternalFilesDir(null), "Download");
+                if (!downloadsFolder.exists()) {
+                    downloadsFolder.mkdirs();
+                }
+
+                // Save PDF in the downloads folder
+                File file = new File(downloadsFolder, fileName);
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                    outputStream.write(pdfBytes);
+                    Toast.makeText(requireContext(), "PDF downloaded successfully", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Error downloading PDF", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Error saving PDF", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

@@ -31,11 +31,16 @@ public class ProfileSelfCompanyFragment extends Fragment {
     private RecyclerView RVJob;
     private RecycleviewJobOfferedAdapter adapter;
     private final ArrayList<jobOffered> jobList = new ArrayList<>();
-    private final String sanitizedEmail = "balaena@gmail_com"; // Example email
+
+    String userEmail;
+
+    String sanitizedEmail;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        sanitizedEmail = userEmail.replace(".", "_");
         View view = inflater.inflate(R.layout.fragment_profile_self_company, container, false);
 
         // Handle window insets for system bars
@@ -59,46 +64,44 @@ public class ProfileSelfCompanyFragment extends Fragment {
         RVJob.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         // Load data into RecyclerView
-        setUpJob();
+            DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child("recruiter")
+                    .child(sanitizedEmail)
+                    .child("postedJobs");
+
+            // Clear the job list before fetching new data to avoid duplication
+            jobList.clear();
+            adapter.notifyDataSetChanged();
+
+            dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot jobIdSnapshot : dataSnapshot.getChildren()) {
+                            String jobId = jobIdSnapshot.getValue(String.class);
+
+                            if (jobId != null) {
+                                fetchJobDetails(jobId);
+                            } else {
+                                Log.w("ProfileSelfCompany", "Invalid job ID encountered.");
+                            }
+                        }
+                    } else {
+                        Log.d("ProfileSelfCompany", "No jobs found for this user.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("ProfileSelfCompany", "Error loading posted jobs: " + databaseError.getMessage());
+                    Toast.makeText(getContext(), "Failed to load posted jobs.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
         return view;
     }
 
-    private void setUpJob() {
-        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
-                .child("recruiter")
-                .child(sanitizedEmail)
-                .child("postedJobs");
-
-        // Clear the job list before fetching new data to avoid duplication
-        jobList.clear();
-        adapter.notifyDataSetChanged();
-
-        dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot jobIdSnapshot : dataSnapshot.getChildren()) {
-                        String jobId = jobIdSnapshot.getValue(String.class);
-
-                        if (jobId != null) {
-                            fetchJobDetails(jobId);
-                        } else {
-                            Log.w("ProfileSelfCompany", "Invalid job ID encountered.");
-                        }
-                    }
-                } else {
-                    Log.d("ProfileSelfCompany", "No jobs found for this user.");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("ProfileSelfCompany", "Error loading posted jobs: " + databaseError.getMessage());
-                Toast.makeText(getContext(), "Failed to load posted jobs.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void fetchJobDetails(String jobId) {
         DatabaseReference jobRef = FirebaseDatabase.getInstance().getReference("jobs").child(jobId);
