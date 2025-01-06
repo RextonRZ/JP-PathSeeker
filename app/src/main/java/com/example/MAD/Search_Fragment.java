@@ -71,6 +71,14 @@ public class Search_Fragment extends Fragment {
             }
         });
 
+        CardView partnerCard = view.findViewById(R.id.partnerCard);
+        partnerCard.setOnClickListener(v -> {
+            // Check current destination before navigating
+            if (Navigation.findNavController(v).getCurrentDestination().getId() == R.id.searchFragment) {
+                Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_partnershipProgramFragment);
+            }
+        });
+
 
         return view;
     }

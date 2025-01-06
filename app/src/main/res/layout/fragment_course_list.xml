@@ -7,11 +7,11 @@
     android:padding="16dp"
     android:background="@color/black">
 
-    <!-- Search Bar -->
     <EditText
         android:id="@+id/search_course"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:hint="Search for a course..."
         android:drawableStart="@drawable/ic_search"
         android:background="@drawable/search_bar_background"
