@@ -64,6 +64,10 @@ public class ProfileSeekerEditFragment extends Fragment {
     private ArrayList<Experience> experienceList = new ArrayList<>();
     private RecycleviewExperienceAdapter adapter;
 
+    String userEmail = UserSessionManager.getInstance().getUserEmail();
+
+    String sanitizedEmail = userEmail.replace(".","_");
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile_seeker_edit, container, false);
@@ -144,9 +148,6 @@ public class ProfileSeekerEditFragment extends Fragment {
     }
 
     private void setUpExperience() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
-
         DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
                 .child("jobseeker")
                 .child(sanitizedEmail)
@@ -334,9 +335,6 @@ public class ProfileSeekerEditFragment extends Fragment {
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
         String base64EncodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
-
         Map<String, Object> imageData = new HashMap<>();
         imageData.put(imageType, base64EncodedImage);
 
@@ -379,8 +377,6 @@ public class ProfileSeekerEditFragment extends Fragment {
             Map<String, Object> pdfData = new HashMap<>();
             pdfData.put("fileName", fileName);
             pdfData.put("base64Pdf", base64EncodedPDF);
-            String userEmail = "andrew@gmail.com";
-            String sanitizedEmail = userEmail.replace(".", "_");
 
             DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("resume");
 
@@ -405,8 +401,6 @@ public class ProfileSeekerEditFragment extends Fragment {
     }
 
     private void checkForExistingProfilePhoto() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -430,8 +424,6 @@ public class ProfileSeekerEditFragment extends Fragment {
     }
 
     private void checkForExistingResume() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("resume");
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -458,15 +450,11 @@ public class ProfileSeekerEditFragment extends Fragment {
             return;
         }
 
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("name");
         userRef.setValue(name.getText().toString().trim());
     }
 
     private void checkForExistingBio() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -493,15 +481,11 @@ public class ProfileSeekerEditFragment extends Fragment {
             return;
         }
 
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("workingStatus");
         userRef.setValue(status.getText().toString().trim());
     }
 
     private void checkForExistingName() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -521,8 +505,6 @@ public class ProfileSeekerEditFragment extends Fragment {
     }
 
     private void checkForExistingStatus() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -547,8 +529,6 @@ public class ProfileSeekerEditFragment extends Fragment {
             return false;
         }
 
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("bio");
 
         int words = countWords(bio.getText().toString().trim());
@@ -570,8 +550,6 @@ public class ProfileSeekerEditFragment extends Fragment {
     }
 
     private void checkForExistingSkill() {
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("skills");
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -638,8 +616,6 @@ public class ProfileSeekerEditFragment extends Fragment {
         skillData3.put("skill", skill3Text);
         skillData3.put("rating", rating3);
 
-        String userEmail = "andrew@gmail.com";
-        String sanitizedEmail = userEmail.replace(".", "_");
         DatabaseReference userRef = mDatabase.child("jobseeker").child(sanitizedEmail).child("skills");
 
         Map<String, Object> allSkillsData = new HashMap<>();
@@ -685,9 +661,6 @@ public class ProfileSeekerEditFragment extends Fragment {
             if (!position.getText().toString().isEmpty() &&
                     !organization.getText().toString().isEmpty() &&
                     !details.getText().toString().isEmpty()) {
-
-                String userEmail = "andrew@gmail.com";
-                String sanitizedEmail = userEmail.replace(".", "_");
 
                 Map<String, String> expData = new HashMap<>();
                 expData.put("position", position.getText().toString());

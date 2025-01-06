@@ -24,6 +24,10 @@ public class RecycleviewExperienceAdapter extends RecyclerView.Adapter<Recyclevi
     private Context context;
     private List<Experience> experienceList;
 
+    String userEmail = UserSessionManager.getInstance().getUserEmail();
+
+    String sanitizedEmail = userEmail.replace(".","_");
+
     // Constructor to initialize context and the experience list
     public RecycleviewExperienceAdapter(Context context, List<Experience> experienceList) {
         this.context = context;
@@ -51,7 +55,6 @@ public class RecycleviewExperienceAdapter extends RecyclerView.Adapter<Recyclevi
         });
 
         holder.btnDeteleExp.setOnClickListener(v -> {
-            String sanitizedEmail = "andrew@gmail_com";
             String expIdToDelete = experience.getExpID();  // Get the ID of the experience to delete
             DatabaseReference expRef = FirebaseDatabase.getInstance().getReference("users")
                     .child("jobseeker")
@@ -64,7 +67,7 @@ public class RecycleviewExperienceAdapter extends RecyclerView.Adapter<Recyclevi
                     experienceList.remove(position);  // Remove from list
                     notifyItemRemoved(position);  // Notify adapter of the removal
 
-                        Toast.makeText(context, "Experience deleted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Experience deleted!", Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(context, "Failed to delete experience", Toast.LENGTH_SHORT).show();
@@ -132,9 +135,6 @@ public class RecycleviewExperienceAdapter extends RecyclerView.Adapter<Recyclevi
 
             // Validate the input fields
             if (!positionText.isEmpty() && !organizationText.isEmpty() && !detailsText.isEmpty()) {
-                // Specify the user's email
-                String userEmail = "andrew@gmail.com";  // Example email, replace with actual user email
-                String sanitizedEmail = userEmail.replace(".", "_");  // Firebase doesn't allow '.' in keys
 
                 // Prepare data to upload
                 Map<String, String> expData = new HashMap<>();
