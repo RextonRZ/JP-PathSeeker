@@ -2,6 +2,7 @@ package com.example.MAD;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -34,12 +35,46 @@ public class AppHomePage extends AppCompatActivity {
         args.putString("workingStatus", workingStatus);
         args.putString("sector", sector);
 
-        // Set up BottomNavigationView
+        ///////////////////// Solved the click here click there problem
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavController navController = Navigation.findNavController(this, R.id.fragment_container);
 
+        navController.setGraph(navController.getGraph(), args);
+
         // Link BottomNavigationView with NavController
         NavigationUI.setupWithNavController(bottomNav, navController);
+
+        // Make sure menu items match destination IDs
+        bottomNav.getMenu().findItem(R.id.careerFragment).setChecked(true);
+
+        // Setup the NavigationUI
+        NavigationUI.setupWithNavController(bottomNav, navController);
+
+        // Add destination change listener
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // Clear all selections first
+            for (int i = 0; i < bottomNav.getMenu().size(); i++) {
+                bottomNav.getMenu().getItem(i).setChecked(false);
+            }
+
+            // Check if we're in any career-related fragment
+            if (destination.getId() == R.id.careerFragment ||
+                    destination.getId() == R.id.mentorshipFragment ||
+                    destination.getId() == R.id.articleFragment ||
+                    destination.getId() == R.id.forumFragment ||
+                    destination.getId() == R.id.healthFragment ||
+                    destination.getId() == R.id.articleDetailFragment ||
+                    destination.getId() == R.id.scheduleFragment ||
+                    destination.getId() == R.id.calendarFragment) {
+                bottomNav.getMenu().findItem(R.id.careerFragment).setChecked(true);
+            } else {
+                // For other destinations, check the corresponding menu item
+                MenuItem item = bottomNav.getMenu().findItem(destination.getId());
+                if (item != null) {
+                    item.setChecked(true);
+                }
+            }
+        });
 
         // Add Main Fragments with Arguments
         setupMainFragments(args);

@@ -18,15 +18,22 @@
         android:id="@+id/careerFragment"
         android:name="com.example.MAD.CareerMain_Fragment"
         tools:layout="@layout/fragment_career_resources_main">
-        <action
-            android:id="@+id/action_careerMain_to_articleFragment"
-            app:destination="@id/articleFragment" />
+        <!-- Mark these fragments as part of the career section -->
         <action
             android:id="@+id/action_careerMain_to_mentorshipFragment"
-            app:destination="@id/mentorshipFragment" />
+            app:destination="@id/mentorshipFragment"
+            app:popUpTo="@id/careerFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_careerMain_to_articleFragment"
+            app:destination="@id/articleFragment"
+            app:popUpTo="@id/careerFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_careerMain_to_forumFragment"
-            app:destination="@id/forumFragment" />
+            app:destination="@id/forumFragment"
+            app:popUpTo="@id/careerFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -58,7 +65,9 @@
     <fragment
         android:id="@+id/mentorshipFragment"
         android:name="com.example.MAD.MentorshipFragment"
-        android:label="mentorshipFragment" />
+        android:label="mentorshipFragment"/>
+    <!-- Add this line to associate with career tab -->
+
     <fragment
         android:id="@+id/forumFragment"
         android:name="com.example.MAD.ForumFragment"

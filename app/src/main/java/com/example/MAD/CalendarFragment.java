@@ -35,9 +35,8 @@ public class CalendarFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
         bookedInfoTextView = view.findViewById(R.id.bookedInfoTextView);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            currentUser = args.getString("userEmail");
+        if (getArguments() != null) {
+            currentUser = getArguments().getString("userEmail");
         }
 
         ImageView backIcon = view.findViewById(R.id.back_icon);
