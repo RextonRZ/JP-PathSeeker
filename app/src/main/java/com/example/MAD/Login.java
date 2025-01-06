@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +43,11 @@ public class Login extends AppCompatActivity {
 
     TextView userName;
 
+    CheckBox rmbMeCheckBox; // Remember Me Checkbox
+
+    private static final String PREFS_NAME = "LoginPrefs";
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +65,13 @@ public class Login extends AppCompatActivity {
         email = findViewById(R.id.emailInput);
         password = findViewById(R.id.passwordInput);
         loginBtn = findViewById(R.id.loginBtn);
+        rmbMeCheckBox = findViewById(R.id.RmbMeCheckBox);
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        // Load saved login state
+        loadSavedLoginState();
         initializePasswordVisibility(password);
 
         TextView forgotPW = findViewById(R.id.forgotPW);
@@ -110,6 +125,31 @@ public class Login extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+    }
+
+    private void loadSavedLoginState() {
+        // Check if email and password are saved
+        String savedEmail = sharedPreferences.getString("email", "");
+        String savedPassword = sharedPreferences.getString("password", "");
+
+        if (!savedEmail.isEmpty() && !savedPassword.isEmpty()) {
+            // Pre-fill the login fields
+            email.setText(savedEmail);
+            password.setText(savedPassword);
+            rmbMeCheckBox.setChecked(true); // Set the checkbox as checked
+        }
+    }
+
+    private void saveLoginState(String email, String password) {
+        // Save email and password if Remember Me is checked
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (rmbMeCheckBox.isChecked()) {
+            editor.putString("email", email);
+            editor.putString("password", password);
+        } else {
+            editor.clear(); // Clear saved login state if Remember Me is unchecked
+        }
+        editor.apply(); // Apply changes
     }
 
     public Boolean validateEmail(){
@@ -181,6 +221,7 @@ public class Login extends AppCompatActivity {
 
         if (passwordFromDB != null && passwordFromDB.equals(hashPassword)) {
             // Extract normalized fields
+            saveLoginState(email.getText().toString().trim(), password.getText().toString().trim());
             String userEmail = userSnapshot.child(userType.equals("recruiter") ? "companyEmail" : "email").getValue(String.class);
             String userName = userSnapshot.child(userType.equals("recruiter") ? "companyName" : "name").getValue(String.class);
 
