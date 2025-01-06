@@ -100,7 +100,14 @@ public class AppHomePage extends AppCompatActivity {
                     destination.getId() == R.id.scheduleFragment ||
                     destination.getId() == R.id.calendarFragment) {
                 bottomNav.getMenu().findItem(R.id.careerFragment).setChecked(true);
-            } else {
+            } else if(destination.getId()==R.id.searchFragment||
+                    destination.getId() == R.id.courseFragment||
+                    destination.getId() == R.id.courseDetailsFragment){
+                    bottomNav.getMenu().findItem(R.id.searchFragment).setChecked(true);
+
+            }
+
+            else {
                 // For other destinations, check the corresponding menu item
                 MenuItem item = bottomNav.getMenu().findItem(destination.getId());
                 if (item != null) {

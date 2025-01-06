@@ -1,63 +1,80 @@
 package com.example.MAD;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CourseDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 public class CourseDetailsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CourseDetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CourseDetailsFragment newInstance(String param1, String param2) {
-        CourseDetailsFragment fragment = new CourseDetailsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public CourseDetailsFragment() {
-        // Required empty public constructor
-    }
+    private TextView courseName, courseDescription, courseLevel, courseDuration, courseRating,courseContent;
+    private ImageView courseImage;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_course_details, container, false);
+
+        // Initialize views
+        courseName = view.findViewById(R.id.course_name_details);
+        courseDescription = view.findViewById(R.id.course_description_details);
+        courseLevel = view.findViewById(R.id.course_level_details);
+        courseContent = view.findViewById(R.id.course_content_details);
+        courseDuration = view.findViewById(R.id.course_duration_details);
+        courseRating = view.findViewById(R.id.course_rating_details);
+        courseImage = view.findViewById(R.id.course_image_details);
+        Button enrollButton = view.findViewById(R.id.btn_enroll);
+        ImageButton backButton = view.findViewById(R.id.back_button);
+
+        // Get the arguments passed from CourseListFragment
+        Bundle args = getArguments();
+        if (args != null) {
+            Course course = (Course) args.getSerializable("course");
+
+            if (course != null) {
+                // Set the course details
+                courseName.setText(course.getCourseName());
+                courseDescription.setText(course.getDescription());
+                courseLevel.setText(course.getLevel());
+                courseContent.setText(course.getContentDetails());
+                courseDuration.setText(course.getDuration());
+                courseRating.setText(String.valueOf(course.getRating()));
+                courseImage.setImageResource(course.getImageResId());
+
+                enrollButton.setOnClickListener(v -> {
+                    String courseUrl = course.getUrl();
+                    if (courseUrl != null && !courseUrl.isEmpty()) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(courseUrl));
+                        startActivity(intent);
+                    } else {
+                        showError("Course URL not available");
+                    }
+                });
+            }
         }
+
+        backButton.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_course_details, container, false);
+    private void showError(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 }
