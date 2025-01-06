@@ -120,6 +120,7 @@ public class ProfileSelfSeekerFragment extends Fragment {
         return view;
     }
 
+
     private void setUpSkill(DatabaseReference userRef) {
         userRef.child("skills").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

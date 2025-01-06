@@ -109,7 +109,7 @@ public class ProfileCompanyViewRateFragment extends Fragment {
 
         // Set the custom layout for the dialog
         dialog.setContentView(R.layout.rating_dialog);
-        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_box));
+        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_boxs));
 
         // Show the dialog
         dialog.show();
@@ -136,7 +136,7 @@ public class ProfileCompanyViewRateFragment extends Fragment {
     private void showSuccessRating() {
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.pop_up_message);
-        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_box));
+        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_boxs));
 
         TextView successRating = dialog.findViewById(R.id.text1);
         successRating.setText("You rated " + " as " + rating + " star!");

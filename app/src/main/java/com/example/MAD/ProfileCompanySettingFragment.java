@@ -1,6 +1,7 @@
 package com.example.MAD;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +20,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class ProfileCompanySettingFragment extends Fragment {
+
+    TextView emailSettingCom;
 
     @Nullable
     @Override
@@ -30,6 +37,9 @@ public class ProfileCompanySettingFragment extends Fragment {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        emailSettingCom = view.findViewById(R.id.emailSettingCom);
+        emailSettingCom.setText(UserSessionManager.getInstance().getUserEmail());
 
         ImageButton btnBack = view.findViewById(R.id.btnBackCom);
 
@@ -69,20 +79,48 @@ public class ProfileCompanySettingFragment extends Fragment {
 
         Button BtnConfirm = dialog.findViewById(R.id.BtnSave);
         BtnConfirm.setText("Deactivate");
+        BtnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ensure userEmail is not null before sanitizing
+                String userEmail = UserSessionManager.getInstance().getUserEmail();
+                if (userEmail != null && !userEmail.isEmpty()) {
+                    String sanitizedEmail = userEmail.replace(".", "_");
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("recruiter").child(sanitizedEmail);
+                    // Delete the user data from the database
+                    userRef.removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            dialog.dismiss();
+                            // Navigate to a login or welcome screen (if needed)
+                            navigateToLoginScreen();
+                            Toast.makeText(requireContext(), "Account is succesfully deactivated.", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            // Handle failure to delete
+                            Toast.makeText(requireContext(), "Failed to deactivate account. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
 
         TextView confirmMessage = dialog.findViewById(R.id.confirmMessage);
         confirmMessage.setText("Permanently delete your account?\nYour account data won’t be recovered.");
-        // Show the dialog
+
         dialog.show();
 
-        // Set a button's functionality to dismiss the dialog
         Button BtnCancel = dialog.findViewById(R.id.BtnCancel);
         BtnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();  // Dismiss the dialog when button is clicked
+                dialog.dismiss();
             }
         });
+    }
+
+    private void navigateToLoginScreen() {
+        Intent intent = new Intent(requireContext(), Login.class); // Change to your login activity
+        startActivity(intent);
     }
 
     private void showLogOutDialog() {
@@ -122,9 +160,10 @@ public class ProfileCompanySettingFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        dialog.dismiss();  // Dismiss the dialog after the delay
+                        dialog.dismiss();
+                        navigateToLoginScreen();
                     }
-                }, 2000);
+                }, 1000);
             }
         });
     }

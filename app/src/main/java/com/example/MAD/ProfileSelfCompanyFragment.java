@@ -1,12 +1,20 @@
 package com.example.MAD;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,17 +38,20 @@ import java.util.ArrayList;
 public class ProfileSelfCompanyFragment extends Fragment {
     private RecyclerView RVJob;
     private RecycleviewJobOfferedAdapter adapter;
+
+    private ImageView profilePhotoSelfCom;
+    private TextView nameSelfCom, sectorSelfCom, numJobSelf, bioSelfCom;
+    private Button btnRetrieveLinkSelf;
+
+    private Uri url;
     private final ArrayList<jobOffered> jobList = new ArrayList<>();
 
-    String userEmail;
-
-    String sanitizedEmail;
+    String userEmail = UserSessionManager.getInstance().getUserEmail();
+    String sanitizedEmail = userEmail.replace(".", "_");
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        userEmail = UserSessionManager.getInstance().getUserEmail();
-        sanitizedEmail = userEmail.replace(".", "_");
         View view = inflater.inflate(R.layout.fragment_profile_self_company, container, false);
 
         // Handle window insets for system bars
@@ -63,45 +74,117 @@ public class ProfileSelfCompanyFragment extends Fragment {
         RVJob.setAdapter(adapter);
         RVJob.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("recruiter").child(sanitizedEmail);
+
+        nameSelfCom = view.findViewById(R.id.nameSelfCom);
+        nameSelfCom.setText(UserSessionManager.getInstance().getUserName());
+
+        sectorSelfCom = view.findViewById(R.id.sectorSelfCom);
+        sectorSelfCom.setText(UserSessionManager.getInstance().getSector());
+
+        bioSelfCom = view.findViewById(R.id.bioSelfCom);
+        accessBio(userRef);
+
+        profilePhotoSelfCom = view.findViewById(R.id.profilePhotoSelfCom);
+        accessProfile(userRef);
+
+        numJobSelf = view.findViewById(R.id.numJobSelf);
         // Load data into RecyclerView
-            DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
-                    .child("recruiter")
-                    .child(sanitizedEmail)
-                    .child("postedJobs");
+        setUpJob();
 
-            // Clear the job list before fetching new data to avoid duplication
-            jobList.clear();
-            adapter.notifyDataSetChanged();
+        btnRetrieveLinkSelf = view.findViewById(R.id.btnRetrieveLinkSelf);
+        accessLink(userRef);
 
-            dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot jobIdSnapshot : dataSnapshot.getChildren()) {
-                            String jobId = jobIdSnapshot.getValue(String.class);
-
-                            if (jobId != null) {
-                                fetchJobDetails(jobId);
-                            } else {
-                                Log.w("ProfileSelfCompany", "Invalid job ID encountered.");
-                            }
-                        }
-                    } else {
-                        Log.d("ProfileSelfCompany", "No jobs found for this user.");
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("ProfileSelfCompany", "Error loading posted jobs: " + databaseError.getMessage());
-                    Toast.makeText(getContext(), "Failed to load posted jobs.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
+        btnRetrieveLinkSelf.setOnClickListener(v -> {
+            // Validate the URL format
+            if (url != null && Patterns.WEB_URL.matcher(url.toString()).matches()) {
+                // If the URL is valid, launch it in a browser
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, url);
+                startActivity(browserIntent);
+            } else {
+                // If the URL is invalid, show a toast message
+                Toast.makeText(requireContext(), "Invalid URL. Please check the URL and try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
 
+    private void accessBio(DatabaseReference userRef) {
+        userRef.child("bio").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String existingBio = dataSnapshot.getValue(String.class);
+                    bioSelfCom.setText(existingBio);
+                } else {
+                    bioSelfCom.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error checking for existing bio: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void accessProfile(DatabaseReference userRef) {
+        userRef.child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String profileImageBase64 = dataSnapshot.getValue(String.class);
+                    if (profileImageBase64 != null) {
+                        byte[] imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT);
+                        Bitmap profileImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        profilePhotoSelfCom.setImageBitmap(profileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error checking for existing profile photo: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void setUpJob() {
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
+                .child("recruiter")
+                .child(sanitizedEmail)
+                .child("postedJobs");
+
+        // Clear the job list before fetching new data to avoid duplication
+        jobList.clear();
+        adapter.notifyDataSetChanged();
+
+        dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot jobIdSnapshot : dataSnapshot.getChildren()) {
+                        String jobId = jobIdSnapshot.getValue(String.class);
+
+                        if (jobId != null) {
+                            fetchJobDetails(jobId);
+                        } else {
+                            Log.w("ProfileSelfCompany", "Invalid job ID encountered.");
+                        }
+                    }
+                } else {
+                    Log.d("ProfileSelfCompany", "No jobs found for this user.");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ProfileSelfCompany", "Error loading posted jobs: " + databaseError.getMessage());
+                Toast.makeText(getContext(), "Failed to load posted jobs.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void fetchJobDetails(String jobId) {
         DatabaseReference jobRef = FirebaseDatabase.getInstance().getReference("jobs").child(jobId);
@@ -115,6 +198,7 @@ public class ProfileSelfCompanyFragment extends Fragment {
                     if (job != null) {
                         jobList.add(job);
                         adapter.notifyItemInserted(jobList.size() - 1); // Notify adapter about the new item
+                        numJobSelf.setText(String.valueOf(jobList.size()));
                     } else {
                         Log.w("ProfileSelfCompany", "Job data is null for ID: " + jobId);
                     }
@@ -126,6 +210,29 @@ public class ProfileSelfCompanyFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("ProfileSelfCompany", "Error fetching job details: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void accessLink(DatabaseReference userRef) {
+        userRef.child("link").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String existingLink = dataSnapshot.getValue(String.class);
+                    if (existingLink != null) {
+                        // Convert the String to Uri
+                        url = Uri.parse(existingLink);
+                        btnRetrieveLinkSelf.setText(existingLink);
+                    }
+                } else {
+                    btnRetrieveLinkSelf.setText("No Website");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error checking for existing link: " + databaseError.getMessage());
             }
         });
     }

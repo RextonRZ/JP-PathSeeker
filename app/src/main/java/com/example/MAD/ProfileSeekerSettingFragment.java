@@ -19,6 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -68,7 +69,7 @@ public class ProfileSeekerSettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Navigate back to the ProfileSelfFragment
-                requireActivity().getSupportFragmentManager().popBackStack();
+                Navigation.findNavController(view).navigateUp();
             }
         });
 

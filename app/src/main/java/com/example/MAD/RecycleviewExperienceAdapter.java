@@ -105,7 +105,7 @@ public class RecycleviewExperienceAdapter extends RecyclerView.Adapter<Recyclevi
 
         // Set the custom layout for the dialog
         dialog.setContentView(R.layout.my_experience);
-        dialog.getWindow().setBackgroundDrawable(context.getDrawable(R.drawable.dialog_box));
+        dialog.getWindow().setBackgroundDrawable(context.getDrawable(R.drawable.dialog_boxs));
 
         // Show the dialog
         dialog.show();

@@ -65,13 +65,13 @@ public class AppHome_Fragment extends Fragment {
         userNameTextView = view.findViewById(R.id.userName);
 
         // Get username from UserSessionManager first
-        String savedUserName = UserSessionManager.getInstance().getUserEmail();
+        String savedUserName = UserSessionManager.getInstance().getUserName();
 
         // If not in UserSessionManager, try to get from arguments
         if (savedUserName == null || savedUserName.isEmpty()) {
             Bundle args = getArguments();
             if (args != null) {
-                savedUserName = args.getString("userMail");
+                savedUserName = args.getString("userName");
                 // Save to UserSessionManager for future use
                 if (savedUserName != null) {
                     UserSessionManager.getInstance().setUserName(savedUserName);

@@ -239,11 +239,11 @@
 
                 <Button
                     android:id="@+id/btnLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="42dp"
+                    android:layout_width="161dp"
+                    android:layout_height="50dp"
                     android:layout_below="@+id/sectorText"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="36dp"
                     android:layout_marginEnd="30dp"
                     android:backgroundTint="#F0801C"
                     android:fontFamily="@font/judson_bold"

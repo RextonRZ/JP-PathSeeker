@@ -646,7 +646,7 @@ public class ProfileSeekerEditFragment extends Fragment {
 
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.my_experience);
-        dialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.dialog_box));
+        dialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.dialog_boxs));
         dialog.show();
 
         Button btnCancel = dialog.findViewById(R.id.BtnCancel);
