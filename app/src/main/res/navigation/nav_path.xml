@@ -19,7 +19,11 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.MAD.Search_Fragment"
-        tools:layout="@layout/fragment_search_main_page" />
+        tools:layout="@layout/fragment_search_main_page" >
+    <action
+        android:id="@+id/action_searchFragment_to_courseFragment"
+        app:destination="@id/courseFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/careerFragment"
@@ -131,6 +135,16 @@
         android:id="@+id/seekerViewRateFragment"
         android:name="com.example.MAD.ProfileSeekerViewRateFragment"
         android:label="seekerViewRateFragment" />
+
+    <fragment
+        android:id="@+id/courseFragment"
+        android:name="com.example.MAD.CourseMainFragment"
+        android:label="courseFragment" />
+
+    <fragment
+        android:id="@+id/courseDetailsFragment"
+        android:name="com.example.MAD.CourseDetailsFragment"
+        android:label="courseDetailsFragment" />
 
 
 </navigation>
