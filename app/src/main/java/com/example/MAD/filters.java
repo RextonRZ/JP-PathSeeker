@@ -1,6 +1,8 @@
 package com.example.MAD;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,9 @@ public class filters extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filter, container, false);
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Location", Context.MODE_PRIVATE);
+        latitude = sharedPreferences.getFloat("LATITUDE", 0f);
+        longitude = sharedPreferences.getFloat("LONGITUDE", 0f);
         // Back button to return to previous page
         ImageButton btnBack = rootView.findViewById(R.id.IBback);
         btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
@@ -89,9 +94,13 @@ public class filters extends Fragment {
         radiusValue = rootView.findViewById(R.id.TVWithinKM);
 
         if (getArguments() != null) {
-            latitude = getArguments().getDouble("LATITUDE", 0.0);
-            longitude = getArguments().getDouble("LONGITUDE", 0.0);
-            int savedRadius = getArguments().getInt("RADIUS", 100);
+            latitude = getArguments().getDouble("LATITUDE", latitude);
+            longitude = getArguments().getDouble("LONGITUDE", longitude);
+            int savedRadius = getArguments().getInt("RADIUS", sharedPreferences.getInt("RADIUS", 100));
+            radiusSeekBar.setProgress(savedRadius);
+            radiusValue.setText("Within " + savedRadius + " km");
+        } else {
+            int savedRadius = sharedPreferences.getInt("RADIUS", 100);
             radiusSeekBar.setProgress(savedRadius);
             radiusValue.setText("Within " + savedRadius + " km");
         }
@@ -111,6 +120,14 @@ public class filters extends Fragment {
         // Apply filters button
         Button btnApplyFilters = rootView.findViewById(R.id.btnApply);
         btnApplyFilters.setOnClickListener(v -> {
+            // Update SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putFloat("LATITUDE", (float) latitude);
+            editor.putFloat("LONGITUDE", (float) longitude);
+            editor.putInt("RADIUS", radiusSeekBar.getProgress());
+            editor.apply();
+
+
             // Create a bundle to pass data to the jobSearchFragment
             Bundle bundle = new Bundle();
 
