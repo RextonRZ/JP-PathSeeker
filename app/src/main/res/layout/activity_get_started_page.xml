@@ -12,70 +12,73 @@
         android:id="@+id/logo"
         android:layout_width="365dp"
         android:layout_height="314dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/pathseekerlogowhite" />
 
-    <TextView
-        android:id="@+id/ByRegister"
+    <!-- Horizontal LinearLayout for Buttons -->
+    <LinearLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_medium"
-        android:text="By registering you agree with our "
-        android:textColor="#B6B6B6"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/textLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpBtnJS" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/TnCWord"
+        <Button
+            android:id="@+id/signUpBtnJS"
+            android:layout_width="190dp"
+            android:layout_height="53dp"
+            android:backgroundTint="#000000"
+            android:fontFamily="@font/judson"
+            android:text="Login"
+            android:textSize="23sp"
+            app:cornerRadius="30sp"
+            app:strokeColor="#FFFFFF"
+            app:strokeWidth="1sp" />
+
+        <Button
+            android:id="@+id/signUpBtn"
+            android:layout_width="184dp"
+            android:layout_height="54dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#D6D6D6"
+            android:fontFamily="@font/judson"
+            android:text="Sign Up"
+            android:textColor="#000000"
+            android:textSize="23sp" />
+    </LinearLayout>
+
+    <!-- Horizontal LinearLayout for TextViews -->
+    <LinearLayout
+        android:id="@+id/textLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_medium"
-        android:text="Terms and Conditions"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/ByRegister"
-        app:layout_constraintTop_toBottomOf="@+id/signUpBtnJS" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <Button
-        android:id="@+id/signUpBtnJS"
-        android:layout_width="190dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="134dp"
-        android:backgroundTint="#000000"
-        android:fontFamily="@font/judson"
-        android:text="Login"
-        android:textSize="23sp"
-        app:cornerRadius="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:strokeColor="#FFFFFF"
-        app:strokeWidth="1sp" />
+        <TextView
+            android:id="@+id/ByRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="By registering you agree with our "
+            android:textColor="#B6B6B6"
+            android:textSize="12sp" />
 
-    <Button
-        android:id="@+id/signUpBtn"
-        android:layout_width="184dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="133dp"
-        android:backgroundTint="#D6D6D6"
-        android:fontFamily="@font/judson"
-        android:text="Sign Up"
-        android:textColor="#000000"
-        android:textSize="23sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.125"
-        app:layout_constraintStart_toEndOf="@+id/signUpBtnJS"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
-
+        <TextView
+            android:id="@+id/TnCWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Terms and Conditions"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

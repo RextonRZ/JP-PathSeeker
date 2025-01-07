@@ -25,7 +25,7 @@ public class Saved extends Fragment implements job_RecyclerViewAdapter.OnBookmar
     private job_RecyclerViewAdapter adapter;
     private DatabaseReference database;
     private ArrayList<Job> jobList = new ArrayList<>();
-    private String username;
+    private String username,userEmail;
 
     public Saved() {
         // Required empty public constructor
@@ -45,8 +45,8 @@ public class Saved extends Fragment implements job_RecyclerViewAdapter.OnBookmar
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_saved, container, false);
 
-        // Initialize username
-        username = "23004947@siswa_um_edu_my";  // Replace with actual data if needed
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username = userEmail.replace(".", "_");
 
         // RecyclerView setup
         RecyclerView recyclerView = rootView.findViewById(R.id.RVjob);

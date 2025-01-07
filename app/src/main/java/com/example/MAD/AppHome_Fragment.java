@@ -88,11 +88,13 @@ public class AppHome_Fragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_forumFragment);
         });
 
+
         // Initialize card3 and set click listener
         CardView card3 = view.findViewById(R.id.card3);
         card3.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_mentorshipFragment);
         });
+
 
         return view;
     }

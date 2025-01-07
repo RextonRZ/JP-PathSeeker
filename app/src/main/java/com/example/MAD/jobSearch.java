@@ -76,9 +76,10 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
         lat = sharedPreferences.getFloat("LATITUDE", 0f);
         lng = sharedPreferences.getFloat("LONGITUDE", 0f);
         radius = sharedPreferences.getInt("RADIUS", 100);
-
         userEmail = UserSessionManager.getInstance().getUserEmail();
-        username =  userEmail.replace(".", "_");
+        username = userEmail.replace(".", "_");
+
+
 
         // Initialize RecyclerView and Adapter
         RecyclerView recyclerView = view.findViewById(R.id.RVjob);

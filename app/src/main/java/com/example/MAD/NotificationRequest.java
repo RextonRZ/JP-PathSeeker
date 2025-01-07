@@ -30,7 +30,7 @@ public class NotificationRequest extends Fragment {
     private RecyclerView recyclerView;
     private ApplicationAdapter adapter;
     private List<Application> applicationList;
-    private String username;
+    private String username,userEmail;
 
     public NotificationRequest() {
         // Required empty public constructor
@@ -42,7 +42,8 @@ public class NotificationRequest extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_notification, container, false);
 
-        username = "balaena@gmail_com";
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username = userEmail.replace(".", "_");
 
         // Initialize and set the click listener for the ImageButton
         ImageButton btnBack = view.findViewById(R.id.IBback);

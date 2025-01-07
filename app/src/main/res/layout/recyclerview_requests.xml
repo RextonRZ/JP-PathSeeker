@@ -102,6 +102,7 @@
                 android:text="View Resume"
                 android:textColor="#88FFFFFF"
                 android:textSize="15sp"
+                android:visibility="invisible"
                 app:layout_constraintStart_toEndOf="@+id/TVviewProfile"
                 app:layout_constraintTop_toBottomOf="@+id/TVAppliedJobType" />
 
