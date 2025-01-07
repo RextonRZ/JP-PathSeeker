@@ -63,6 +63,14 @@ public class Search_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_main_page, container, false);
 
+        CardView findAJobCard = view.findViewById(R.id.findAJobCard);
+        findAJobCard.setOnClickListener(v -> {
+            // Check current destination before navigating
+            if (Navigation.findNavController(v).getCurrentDestination().getId() == R.id.searchFragment) {
+                Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_jobMainFragment);
+            }
+        });
+
         CardView skillCard = view.findViewById(R.id.skillCard);
         skillCard.setOnClickListener(v -> {
             // Check current destination before navigating

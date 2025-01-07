@@ -20,15 +20,18 @@
         android:id="@+id/searchFragment"
         android:name="com.example.MAD.Search_Fragment"
         tools:layout="@layout/fragment_search_main_page" >
-    <action
-        android:id="@+id/action_searchFragment_to_courseFragment"
-        app:destination="@id/courseFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_courseFragment"
+            app:destination="@id/courseFragment" />
         <action
             android:id="@+id/action_searchFragment_to_partnershipProgramFragment"
             app:destination="@id/partnershipProgramFragment" />
         <action
             android:id="@+id/action_searchFragment_to_eventsFragment"
             app:destination="@id/eventsFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_jobMainFragment"
+            app:destination="@id/jobMainFragment" />
     </fragment>
 
     <fragment
@@ -161,5 +164,54 @@
         android:id="@+id/eventsFragment"
         android:name="com.example.MAD.EventsFragment"
         android:label="eventsFragment" />
+
+    <fragment
+        android:id="@+id/jobSearchFragment"
+        android:name="com.example.MAD.jobSearch"
+        android:label="jobSearchFragment" />
+
+    <fragment
+        android:id="@+id/jobFilterFragment"
+        android:name="com.example.MAD.filters"
+        android:label="jobFilterFragment" />
+
+    <fragment
+        android:id="@+id/savedFragment"
+        android:name="com.example.MAD.Saved"
+        android:label="savedFragment" />
+
+    <fragment
+        android:id="@+id/notificationStatus"
+        android:name="com.example.MAD.NotificationStatus"
+        android:label="notificationStatus" />
+
+    <fragment
+        android:id="@+id/notificationRequest"
+        android:name="com.example.MAD.NotificationRequest"
+        android:label="notificationRequest" />
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.MAD.MapsFragment"
+        android:label="mapsFragment" />
+    <fragment
+        android:id="@+id/jobDetailsFragment"
+        android:name="com.example.MAD.jobDetails"
+        android:label="jobDetailsFragment" />
+    <fragment
+        android:id="@+id/jobMainFragment"
+        android:name="com.example.MAD.JobMain"
+        android:label="jobMainFragment" >
+    <action
+        android:id="@+id/action_jobMainFragment_to_jobSearchFragment"
+        app:destination="@id/jobSearchFragment" />
+        <action
+            android:id="@+id/action_jobMainFragment_to_jobPostedFragment"
+            app:destination="@id/jobPostedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobPostedFragment"
+        android:name="com.example.MAD.jobPosted"
+        android:label="jobPostedFragment" />
 
 </navigation>
