@@ -213,5 +213,8 @@
         android:id="@+id/jobPostedFragment"
         android:name="com.example.MAD.jobPosted"
         android:label="jobPostedFragment" />
-
+    <fragment
+        android:id="@+id/profileCompanyViewRate"
+        android:name="com.example.MAD.ProfileCompanyViewRateFragment"
+        android:label="profileCompanyViewRate" />
 </navigation>

@@ -18,7 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +61,8 @@ public class jobDetails extends Fragment {
     private JobTypeAdapter adapter;
     private String username = "23004947@siswa_um_edu_my";
 
+    private CardView CVClickCard;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,11 +78,18 @@ public class jobDetails extends Fragment {
         pic = view.findViewById(R.id.IVcompanyPic);
         companyPic = view.findViewById(R.id.IVcompanyPicinCard);
         companyNameinCard = view.findViewById(R.id.TVCompanyNameinCard);
+        CVClickCard = view.findViewById(R.id.CVClickCard);
 
         // Back button to navigate to previous fragment or activity
         ImageButton btnBack = view.findViewById(R.id.IBback);
         btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
 
+        CVClickCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireView()).navigate(R.id.profileCompanyViewRate);
+            }
+        });
         // Get job ID from arguments
         if (getArguments() != null) {
             jobId = getArguments().getString("jobId");
