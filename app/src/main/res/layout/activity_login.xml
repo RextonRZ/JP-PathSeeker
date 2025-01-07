@@ -69,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/judson"
                 android:text="Email address"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -84,6 +85,7 @@
                 android:fontFamily="@font/judson"
                 android:hint="Your email"
                 android:inputType="textEmailAddress"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
             <View
@@ -95,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/judson"
                 android:text="Password"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -110,6 +113,7 @@
                 android:fontFamily="@font/judson"
                 android:hint="Your password"
                 android:inputType="textPassword"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
             <RelativeLayout
@@ -123,7 +127,7 @@
                     android:layout_centerVertical="true"
                     android:fontFamily="@font/judson"
                     android:text="Remember me"
-                    android:textColor="#6B5858"
+                    android:textColor="@color/black"
                     android:textSize="15sp" />
 
                 <TextView
@@ -132,11 +136,12 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:fontFamily="@font/judson"
                     android:text="I forgot my password"
-                    android:textSize="15sp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
             </RelativeLayout>
 
             <View
@@ -150,6 +155,7 @@
                 android:backgroundTint="@color/black"
                 android:fontFamily="@font/judson"
                 android:text="Login"
+                android:textColor="@color/white"
                 android:textSize="23sp"
                 app:cornerRadius="30dp" />
 

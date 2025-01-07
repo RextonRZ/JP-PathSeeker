@@ -36,6 +36,7 @@
             android:backgroundTint="#000000"
             android:fontFamily="@font/judson"
             android:text="Login"
+            android:textColor="@color/white"
             android:textSize="23sp"
             app:cornerRadius="30sp"
             app:strokeColor="#FFFFFF"
