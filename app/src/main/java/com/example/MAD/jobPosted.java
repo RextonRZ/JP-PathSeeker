@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,20 +39,32 @@ public class jobPosted extends Fragment {
     private TextView welcome;
     private ShapeableImageView profilePic;
 
+    private String userEmail;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_job_posted, container, false);
-
-        username = "balaena@gmail_com";
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username =  userEmail.replace(".", "_");
 
         // Button to go to notifications
         ImageButton btnNoti = view.findViewById(R.id.IBnoti);
-        btnNoti.setOnClickListener(v -> startActivity(new Intent(getActivity(), NotificationRequest.class)));
+        btnNoti.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireView()).navigate(R.id.notiRequestFragment);
+            }
+        });
 
         // Floating action button to create a new job
         FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingActionButton);
-        floatingActionButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), CreateNewJob.class)));
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireView()).navigate(R.id.createNewJobFragment);
+            }
+        });
 
         // Initialize RecyclerView and Adapter
         RecyclerView recyclerView = view.findViewById(R.id.RVjobPosted);

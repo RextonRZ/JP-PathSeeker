@@ -102,7 +102,20 @@ public class AppHomePage extends AppCompatActivity {
                 bottomNav.getMenu().findItem(R.id.careerFragment).setChecked(true);
             } else if(destination.getId()==R.id.searchFragment||
                     destination.getId() == R.id.courseFragment||
+                    destination.getId() == R.id.courseDetailsFragment||
+                    destination.getId() == R.id.jobSearchFragment||
+                    destination.getId() == R.id.jobDetailsFragment||
+                    destination.getId() == R.id.notiRequestFragment||
+                    destination.getId() == R.id.notificationStatus||
+                    destination.getId() == R.id.notificationRequest||
                     destination.getId() == R.id.partnershipProgramFragment||
+                    destination.getId() == R.id.eventsFragment||
+                    destination.getId() == R.id.createNewJobFragment||
+                    destination.getId() == R.id.jobMainFragment||
+                    destination.getId() == R.id.jobFilterFragment||
+                    destination.getId() == R.id.mapsFragment||
+                    destination.getId() == R.id.savedFragment||
+                    destination.getId() == R.id.jobPostedFragment||
                     destination.getId() == R.id.courseDetailsFragment){
                     bottomNav.getMenu().findItem(R.id.searchFragment).setChecked(true);
             } else if(destination.getId()==R.id.profileFragment||

@@ -84,12 +84,7 @@ public class jobDetails extends Fragment {
         ImageButton btnBack = view.findViewById(R.id.IBback);
         btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
 
-        CVClickCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(requireView()).navigate(R.id.profileCompanyViewRate);
-            }
-        });
+
         // Get job ID from arguments
         if (getArguments() != null) {
             jobId = getArguments().getString("jobId");
@@ -99,8 +94,19 @@ public class jobDetails extends Fragment {
             Toast.makeText(requireContext(), "Job ID is missing", Toast.LENGTH_SHORT).show();
             return view; // Exit if no job ID is found
         }
-
         fetchJobDetails(jobId);
+        CVClickCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                // Pass both jobId and companyId
+                bundle.putString("rateUser", companyId); // Pass the company ID instead of job ID
+                bundle.putString("jobId", jobId);
+
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.profileCompanyViewRate, bundle); // Pass the bundle to navigate()
+            }
+        });
 
         TextView seeJobType = view.findViewById(R.id.TVJobType);
         seeJobType.setOnClickListener(v -> showPopUp("Job Types", JobType));
@@ -276,6 +282,7 @@ public class jobDetails extends Fragment {
                         jobType = job.getJobTypes();
                         JobType = jobType.toString();
                         Remote = job.getRemoteOptions().toString();
+
                         // Calculate and set the time posted
                         long currentTimeMillis = System.currentTimeMillis();
                         long timeDifference = currentTimeMillis - job.getTimePosted(); // Get time difference in milliseconds

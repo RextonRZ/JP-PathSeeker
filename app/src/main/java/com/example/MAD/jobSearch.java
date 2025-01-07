@@ -64,6 +64,8 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
 
     private View view;
 
+    private String userEmail;
+
 
     @Nullable
     @Override
@@ -75,7 +77,8 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
         lng = sharedPreferences.getFloat("LONGITUDE", 0f);
         radius = sharedPreferences.getInt("RADIUS", 100);
 
-        username = "23004947@siswa_um_edu_my";
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username =  userEmail.replace(".", "_");
 
         // Initialize RecyclerView and Adapter
         RecyclerView recyclerView = view.findViewById(R.id.RVjob);

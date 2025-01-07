@@ -217,4 +217,12 @@
         android:id="@+id/profileCompanyViewRate"
         android:name="com.example.MAD.ProfileCompanyViewRateFragment"
         android:label="profileCompanyViewRate" />
+    <fragment
+        android:id="@+id/notiRequestFragment"
+        android:name="com.example.MAD.NotificationRequest"
+        android:label="notiRequestFragment" />
+    <fragment
+        android:id="@+id/createNewJobFragment"
+        android:name="com.example.MAD.CreateNewJob"
+        android:label="createNewJobFragment" />
 </navigation>

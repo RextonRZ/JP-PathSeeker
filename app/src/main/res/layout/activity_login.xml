@@ -62,7 +62,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+                android:layout_height="27dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="11dp" />
 
             <EditText
                 android:id="@+id/emailInput"
@@ -100,7 +100,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="25dp" />
+                android:layout_height="11dp" />
 
             <EditText
                 android:id="@+id/passwordInput"
@@ -152,10 +152,6 @@
                 android:text="Login"
                 android:textSize="23sp"
                 app:cornerRadius="30dp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="10dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

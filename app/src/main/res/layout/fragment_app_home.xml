@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="-25dp"
     android:background="#000000">
 
     <!-- Navigation Host Fragment -->
@@ -70,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardView"
@@ -232,7 +233,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         app:cardCornerRadius="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userName">
@@ -262,7 +263,7 @@
         android:layout_width="146dp"
         android:layout_height="20dp"
         android:layout_marginStart="19dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/judson"
         android:text=" Latest Notices"
         android:textColor="@color/white"
@@ -276,8 +277,8 @@
         android:id="@+id/seeMoreHome"
         android:layout_width="71dp"
         android:layout_height="17dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="40dp"
         android:fontFamily="@font/judson"
         android:text="See More"
         android:textColor="#BFBFBF"

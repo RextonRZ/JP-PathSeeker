@@ -29,7 +29,7 @@
                 app:srcCompat="@drawable/img" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imageView"
+                android:id="@+id/profilePhotoRate2"
                 android:layout_width="157dp"
                 android:layout_height="156dp"
                 android:layout_marginTop="24dp"
@@ -40,7 +40,7 @@
                 app:srcCompat="@drawable/img_1" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/nameRate2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -51,10 +51,10 @@
                 android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/profilePhotoRate2" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/sectorRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="78dp"
@@ -66,7 +66,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/nameRate2" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
@@ -75,7 +75,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7">
+                app:layout_constraintTop_toBottomOf="@+id/sectorRate">
 
                 <ImageView
                     android:id="@+id/imageView14"
@@ -91,7 +91,7 @@
                     app:srcCompat="@drawable/rectangle_round_white" />
 
                 <TextView
-                    android:id="@+id/textView43"
+                    android:id="@+id/rating2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -128,15 +128,14 @@
                     android:textSize="20sp"
                     app:layout_constraintEnd_toStartOf="@+id/divider15"
                     app:layout_constraintStart_toStartOf="@+id/imageView14"
-                    app:layout_constraintTop_toBottomOf="@+id/textView43" />
+                    app:layout_constraintTop_toBottomOf="@+id/rating2" />
 
                 <TextView
-                    android:id="@+id/textView45"
+                    android:id="@+id/jobRate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/judson_bold"
-                    android:text="5"
                     android:textAlignment="center"
                     android:textColor="#000000"
                     android:textSize="40sp"
@@ -155,7 +154,7 @@
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="@+id/imageView14"
                     app:layout_constraintStart_toEndOf="@+id/divider15"
-                    app:layout_constraintTop_toBottomOf="@+id/textView45" />
+                    app:layout_constraintTop_toBottomOf="@+id/jobRate" />
 
                 <TextView
                     android:id="@+id/textView49"
@@ -174,7 +173,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/imageView14" />
 
                 <Button
-                    android:id="@+id/btnRetrievePDF2"
+                    android:id="@+id/btnLinkRate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="34dp"
@@ -201,7 +200,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView49" />
 
                 <EditText
-                    android:id="@+id/editTextTextMultiLine6"
+                    android:id="@+id/bioRate2"
                     android:layout_width="317dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="20dp"
@@ -212,7 +211,6 @@
                     android:fontFamily="@font/judson_bold"
                     android:gravity="center"
                     android:inputType="textMultiLine"
-                    android:text="Hi, I'm Judy Hopps, an energetic rabbit with a passion for justice and problem-solving. As Zootopia's first rabbit police officer, I bring a unique perspective, strong work ethic, and commitment to making a positive impact. I thrive in fast-paced environments, tackling challenges with creativity and perseverance. "
                     android:textSize="15dp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView15"
                     app:layout_constraintEnd_toEndOf="@+id/imageView6"
@@ -256,7 +254,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/divider25">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/RVJob"
+                        android:id="@+id/RVJobRate"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </ScrollView>

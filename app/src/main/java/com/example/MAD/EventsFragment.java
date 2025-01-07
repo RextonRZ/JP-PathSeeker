@@ -9,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.widget.Toast;
+import androidx.core.content.ContextCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +34,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class EventsFragment extends Fragment implements OnMapReadyCallback {
+    private static final int CALENDAR_PERMISSION_REQUEST_CODE = 1001;
     private static final String TAG = "EventsFragment";
     private MapView mapView;
     private GoogleMap googleMap;
@@ -83,6 +89,19 @@ public class EventsFragment extends Fragment implements OnMapReadyCallback {
 
     private void addToGoogleCalendar(Event event) {
         Log.e(TAG, "Adding event to Google Calendar: " + event.getTitle());
+
+        // Check for calendar permissions first
+        if (getContext() == null ||
+                (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_CALENDAR)
+                        != PackageManager.PERMISSION_GRANTED)) {
+
+            requestPermissions(
+                    new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR},
+                    CALENDAR_PERMISSION_REQUEST_CODE
+            );
+            return;
+        }
+
         Calendar beginTime = Calendar.getInstance();
         Calendar endTime = Calendar.getInstance();
 
@@ -90,13 +109,13 @@ public class EventsFragment extends Fragment implements OnMapReadyCallback {
             // Parse date (format: DD/MM/YYYY)
             String[] dateParts = event.getDate().split("/");
             int year = Integer.parseInt(dateParts[2]);
-            int month = Integer.parseInt(dateParts[1]) - 1; // Months are zero-based in Calendar
+            int month = Integer.parseInt(dateParts[1]) - 1; // Months are zero-based
             int day = Integer.parseInt(dateParts[0]);
 
             // Parse start time (format: HH:MM AM/PM)
             String[] startTimeParts = event.getStartTime().split(" ");
             String[] startHourMin = startTimeParts[0].split(":");
-            int startHour = Integer.parseInt(startHourMin[0]) % 12; // Ensure 12-hour format
+            int startHour = Integer.parseInt(startHourMin[0]) % 12;
             if (startTimeParts[1].equalsIgnoreCase("PM")) startHour += 12;
             int startMinute = Integer.parseInt(startHourMin[1]);
 
@@ -107,28 +126,56 @@ public class EventsFragment extends Fragment implements OnMapReadyCallback {
             if (endTimeParts[1].equalsIgnoreCase("PM")) endHour += 12;
             int endMinute = Integer.parseInt(endHourMin[1]);
 
-            // Set the event start and end times
             beginTime.set(year, month, day, startHour, startMinute);
             endTime.set(year, month, day, endHour, endMinute);
+
+            // Try direct calendar content provider insertion as backup method
+            ContentValues values = new ContentValues();
+            values.put(CalendarContract.Events.CALENDAR_ID, 1); // Default calendar
+            values.put(CalendarContract.Events.TITLE, event.getTitle());
+            values.put(CalendarContract.Events.DESCRIPTION, "Event at " + event.getVenue());
+            values.put(CalendarContract.Events.EVENT_LOCATION, event.getVenue());
+            values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
+            values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
+            values.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
+
+            Uri uri = getContext().getContentResolver().insert(CalendarContract.Events.CONTENT_URI, values);
+            if (uri != null) {
+                Toast.makeText(getContext(), "Event added to calendar", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // If content provider insertion fails, try intent method as fallback
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                    .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getVenue())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, "Event at " + event.getVenue());
+
+            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "No calendar app found", Toast.LENGTH_SHORT).show();
+            }
+
         } catch (Exception e) {
-            Log.e(TAG, "Error parsing event date/time: " + e.getMessage());
-            return;
+            Log.e(TAG, "Error adding event to calendar: " + e.getMessage());
+            Toast.makeText(getContext(), "Error adding event to calendar", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        // Create an intent to add the event to the calendar
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        intent.setData(CalendarContract.Events.CONTENT_URI);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
-        intent.putExtra(CalendarContract.Events.TITLE, event.getTitle());
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getVenue());
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, "Event at " + event.getVenue());
-
-        // Check if the calendar app can handle the intent
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Log.e(TAG, "No app available to add events to Google Calendar.");
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CALENDAR_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, retry adding the event
+                // You'll need to store the event temporarily or pass it back somehow
+                Toast.makeText(getContext(), "Calendar permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Calendar permission required to add events", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
