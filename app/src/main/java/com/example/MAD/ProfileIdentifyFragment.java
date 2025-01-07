@@ -65,7 +65,7 @@ public class ProfileIdentifyFragment extends Fragment {
 
         view.post(() -> {
             try {
-                String dob = getCurrentDOB();
+                String dob = UserSessionManager.getInstance().getDob();
                 Log.d("ProfileIdentifyFragment", "DOB value: " + dob);
                 if (dob != null && !dob.isEmpty()) {
                     Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_selfSeekerFragment);
@@ -89,11 +89,11 @@ public class ProfileIdentifyFragment extends Fragment {
         return UserSessionManager.getInstance().getUserName();
     }
 
-    private String getCurrentDOB() {
+    /*private String getCurrentDOB() {
         String dob = UserSessionManager.getInstance().getDob();
         return dob != null ? dob : "";  // Return empty string if null
     }
-
+*/
     private String getCurrentWorkingStatus() {
         return UserSessionManager.getInstance().getWorkingStatus();
     }

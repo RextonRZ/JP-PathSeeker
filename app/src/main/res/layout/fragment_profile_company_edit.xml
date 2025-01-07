@@ -160,7 +160,6 @@
                     android:ems="10"
                     android:fontFamily="@font/judson_bold"
                     android:inputType="text"
-                    android:text="Judy Hopps"
                     android:textAlignment="textEnd"
                     android:textColor="#DADADA"
                     android:textSize="20sp" />
@@ -206,7 +205,6 @@
                     android:ems="10"
                     android:fontFamily="@font/judson_bold"
                     android:inputType="text"
-                    android:text="Freelancer, Universiti Malaya"
                     android:textColor="#DADADA"
                     android:textSize="15sp" />
 
@@ -239,15 +237,17 @@
 
                 <Button
                     android:id="@+id/btnLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="42dp"
+                    android:layout_width="153dp"
+                    android:layout_height="50dp"
                     android:layout_below="@+id/sectorText"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="40dp"
-                    android:layout_marginEnd="30dp"
+                    android:layout_marginEnd="37dp"
                     android:backgroundTint="#F0801C"
                     android:fontFamily="@font/judson_bold"
+                    android:gravity="center"
                     android:text="Website Link"
+                    android:textAlignment="center"
                     android:textSize="16sp"
                     app:cornerRadius="20dp"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -267,7 +267,6 @@
                     android:fontFamily="@font/judson_bold"
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
-                    android:text="Zootopia is a vibrant, inclusive company that celebrates diversity and innovation. We offer endless career opportunities. Whether you're looking to launch your career or take it to the next level, Zootopia is the place where dreams thrive."
                     android:textColor="#DADADA"
                     android:textSize="15dp" />
 

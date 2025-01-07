@@ -1,6 +1,7 @@
 package com.example.MAD;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -59,14 +66,15 @@ public class RecycleviewJobOfferedAdapter extends RecyclerView.Adapter<Recyclevi
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        Button btnDetails;
         TextView TVJobCategory, TVJobPosition;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             TVJobCategory = itemView.findViewById(R.id.TVJobCategory);
             TVJobPosition = itemView.findViewById(R.id.TVJobPosition);
-            btnDetails = itemView.findViewById(R.id.btnDetails);
+
         }
     }
+
+
 }

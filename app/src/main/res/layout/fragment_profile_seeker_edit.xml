@@ -160,7 +160,6 @@
                     android:ems="10"
                     android:fontFamily="@font/judson_bold"
                     android:inputType="text"
-                    android:text="Judy Hopps"
                     android:textAlignment="textEnd"
                     android:textColor="#DADADA"
                     android:textSize="20sp" />
@@ -206,7 +205,6 @@
                     android:ems="10"
                     android:fontFamily="@font/judson_bold"
                     android:inputType="text"
-                    android:text="Freelancer, Universiti Malaya"
                     android:textColor="#DADADA"
                     android:textSize="15sp" />
 
@@ -269,7 +267,6 @@
                     android:fontFamily="@font/judson_bold"
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
-                    android:text="Hi, I'm Judy Hopps, an energetic rabbit with a passion for justice and problem-solving. As Zootopia's first rabbit police officer, I bring a unique perspective, strong work ethic, and commitment to making a positive impact. I thrive in fast-paced environments, tackling challenges with creativity and perseverance."
                     android:textColor="#DADADA"
                     android:textSize="15dp" />
 

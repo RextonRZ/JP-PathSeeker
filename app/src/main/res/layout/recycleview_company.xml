@@ -49,11 +49,13 @@
                 android:layout_marginStart="100dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="99dp"
+                android:layout_marginBottom="20dp"
                 android:fontFamily="@font/judson_bold"
                 android:gravity="center"
                 android:text="Position"
                 android:textColor="#000000"
                 android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.533"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,24 +82,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/poText" />
-
-            <Button
-                android:id="@+id/btnDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="61dp"
-                android:layout_marginBottom="4dp"
-                android:backgroundTint="#F0801C"
-                android:fontFamily="@font/judson_bold"
-                android:text="More Details"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.466"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/TVJobPosition" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

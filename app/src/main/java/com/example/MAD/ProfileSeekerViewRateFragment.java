@@ -1,12 +1,20 @@
 package com.example.MAD;
 
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,17 +34,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class ProfileSeekerViewRateFragment extends Fragment {
 
     private float rating;
-    private RecyclerView RVSkill, RVExpShow;
+    private RecyclerView RVSkillRate, RVExpShowRate;
 
     private RecycleviewSkillAdapter adapter;
     private RecycleviewExperienceShowAdapter adapter2;
     private ArrayList<Skill> skillList = new ArrayList<>();
     private ArrayList<ExperienceShow> expShowList = new ArrayList<>();
+
+    TextView nameRate1, statusRate1, numExpRate, bioRate1;
+    ImageView profilePhotoRate1;
+
+    Button btnPdfRate;
 
     private final String sanitizedEmail = "andrew@gmail_com";
 
@@ -53,33 +70,86 @@ public class ProfileSeekerViewRateFragment extends Fragment {
             return insets;
         });
 
-        // Initialize RecyclerViews
-        RVSkill = view.findViewById(R.id.RVSkill);
-        RVExpShow = view.findViewById(R.id.RVExpShow);
+        // Ensure userEmail is not null before sanitizing
+        String userEmail = UserSessionManager.getInstance().getUserEmail();
+        if (userEmail != null && !userEmail.isEmpty()) {
+            String sanitizedEmail = userEmail.replace(".", "_");
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("jobseeker").child(sanitizedEmail);
 
-        // Set up skill RecyclerView
-        adapter = new RecycleviewSkillAdapter(requireContext(), skillList);
-        RVSkill.setAdapter(adapter);
-        RVSkill.setLayoutManager(new LinearLayoutManager(requireContext()));
-        setUpSkill();
+            // Initialize RecyclerView for Skills
+            RVSkillRate = view.findViewById(R.id.RVSkillRate);
+            adapter = new RecycleviewSkillAdapter(requireContext(), skillList);
+            RVSkillRate.setAdapter(adapter);
+            RVSkillRate.setLayoutManager(new LinearLayoutManager(requireContext()));
+            setUpSkill(userRef);
 
-        // Set up experience RecyclerView
-        adapter2 = new RecycleviewExperienceShowAdapter(requireContext(), expShowList);
-        RVExpShow.setAdapter(adapter2);
-        RVExpShow.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        setUpExp();
+            // Initialize RecyclerView for Experience
+            RVExpShowRate = view.findViewById(R.id.RVExpShowRate);
+            adapter2 = new RecycleviewExperienceShowAdapter(requireContext(), expShowList);
+            RVExpShowRate.setAdapter(adapter2);
+            RVExpShowRate.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+            setUpExp(userRef);
 
-        // Handle "Rate Seeker" button click
-        Button showDialogButton = view.findViewById(R.id.btnRateSeeker);
-        showDialogButton.setOnClickListener(v -> showCustomDialog());
+            // Initialize Views
+            nameRate1 = view.findViewById(R.id.nameRate1);
+            userRef.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String name = dataSnapshot.getValue(String.class);
+                    if (name != null) {
+                        nameRate1.setText(name);
+                    } else {
+                        nameRate1.setText("Name not available");
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("YourFragment", "Error fetching user name: " + databaseError.getMessage());
+                }
+            });
+
+            statusRate1 = view.findViewById(R.id.statusRate1);
+
+            userRef.child("status").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String name = dataSnapshot.getValue(String.class);
+                    if (name != null) {
+                        statusRate1.setText(name);
+                    } else {
+                        statusRate1.setText("Status not available");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("YourFragment", "Error fetching status: " + databaseError.getMessage());
+                }
+            });
+
+
+
+            bioRate1 = view.findViewById(R.id.bioRate1);
+            accessBio(userRef);
+
+            profilePhotoRate1 = view.findViewById(R.id.profilePhotoRate1);
+            accessProfile(userRef);
+
+            btnPdfRate = view.findViewById(R.id.btnPdfRate);
+            btnPdfRate.setOnClickListener(v -> retrievePDFFromDatabase(userRef));
+
+            numExpRate = view.findViewById(R.id.expRate);
+
+            // Handle "Rate Seeker" button click
+            Button showDialogButton = view.findViewById(R.id.btnRateSeeker);
+            showDialogButton.setOnClickListener(v -> showCustomDialog());
+        }
         return view;
     }
 
-    private void setUpSkill() {
-        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
-                .child("jobseeker")
-                .child(sanitizedEmail)
+    private void setUpSkill(DatabaseReference userRef) {
+        DatabaseReference dataRef = userRef
                 .child("skills");
 
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -97,6 +167,7 @@ public class ProfileSeekerViewRateFragment extends Fragment {
                             }
                         }
                         adapter.notifyDataSetChanged();
+
                     } else {
                         Log.d("Skill List", "No skills found for user.");
                     }
@@ -113,10 +184,8 @@ public class ProfileSeekerViewRateFragment extends Fragment {
         });
     }
 
-    private void setUpExp() {
-        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("users")
-                .child("jobseeker")
-                .child(sanitizedEmail)
+    private void setUpExp(DatabaseReference userRef) {
+        DatabaseReference dataRef = userRef
                 .child("experience");
 
         dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -134,6 +203,7 @@ public class ProfileSeekerViewRateFragment extends Fragment {
                             }
                         }
                         adapter2.notifyDataSetChanged();
+                        numExpRate.setText(String.valueOf(expShowList.size()));
                     } else {
                         Log.d("Experience List", "No experiences found for user.");
                     }
@@ -148,6 +218,122 @@ public class ProfileSeekerViewRateFragment extends Fragment {
                 Log.e("FirebaseError", "Error loading experiences: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void accessBio(DatabaseReference userRef) {
+        userRef.child("bio").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String existingBio = dataSnapshot.getValue(String.class);
+                    bioRate1.setText(existingBio);
+                } else {
+                    bioRate1.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error checking for existing bio: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void accessProfile(DatabaseReference userRef) {
+        userRef.child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String profileImageBase64 = dataSnapshot.getValue(String.class);
+                    if (profileImageBase64 != null) {
+                        byte[] imageBytes = Base64.decode(profileImageBase64, Base64.DEFAULT);
+                        Bitmap profileImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        profilePhotoRate1.setImageBitmap(profileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error checking for existing profile photo: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void retrievePDFFromDatabase(DatabaseReference userRef) {
+
+        // Reference to the user's 'resume' node in the database
+        DatabaseReference userPdfRef = userRef.child("resume");
+
+        // Get the data for the resume
+        userPdfRef.get().addOnSuccessListener(snapshot -> {
+            if (!snapshot.exists()) {
+                Toast.makeText(requireContext(), "No PDF found for this user", Toast.LENGTH_SHORT).show();
+            } else {
+                // Retrieve the base64-encoded PDF string and fileName
+                String base64EncodedPDF = snapshot.child("base64Pdf").getValue(String.class);
+                String fileName = snapshot.child("fileName").getValue(String.class);
+
+                if (base64EncodedPDF != null && fileName != null) {
+                    // Decode the base64 string to get the PDF bytes
+                    byte[] pdfBytes = Base64.decode(base64EncodedPDF, Base64.DEFAULT);
+
+                    // Download the PDF with the appropriate fileName
+                    downloadPDF(pdfBytes, fileName);
+                } else {
+                    Toast.makeText(requireContext(), "PDF data is incomplete", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(requireContext(), "Error retrieving PDF: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void downloadPDF(byte[] pdfBytes, String fileName) {
+        try {
+            // Check if we are on Android 10 (API 29) or later
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Use MediaStore to save the file in the Downloads folder (Scoped Storage for Android 10+)
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
+                values.put(MediaStore.Downloads.RELATIVE_PATH, "Download/");
+
+                Uri pdfUri = requireContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+
+                if (pdfUri != null) {
+                    // Open output stream to save the PDF file
+                    try (OutputStream outputStream = requireContext().getContentResolver().openOutputStream(pdfUri)) {
+                        if (outputStream != null) {
+                            outputStream.write(pdfBytes);
+                            Toast.makeText(requireContext(), "PDF downloaded successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(requireContext(), "Error downloading PDF", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                // For devices below Android 10, write to external storage directly
+                File downloadsFolder = new File(requireContext().getExternalFilesDir(null), "Download");
+                if (!downloadsFolder.exists()) {
+                    downloadsFolder.mkdirs();
+                }
+
+                // Save PDF in the downloads folder
+                File file = new File(downloadsFolder, fileName);
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                    outputStream.write(pdfBytes);
+                    Toast.makeText(requireContext(), "PDF downloaded successfully", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Error downloading PDF", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Error saving PDF", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showCustomDialog() {
