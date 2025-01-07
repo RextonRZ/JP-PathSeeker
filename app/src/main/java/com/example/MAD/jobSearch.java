@@ -101,7 +101,11 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
         // Filter button to navigate to filter page
         ImageButton btnFilter = view.findViewById(R.id.IBfilter);
         btnFilter.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.jobFilterFragment);
+            Bundle bundle = new Bundle();
+            bundle.putDouble("LATITUDE", lat);
+            bundle.putDouble("LONGITUDE", lng);
+            bundle.putInt("RADIUS", radius);
+            Navigation.findNavController(requireView()).navigate(R.id.jobFilterFragment, bundle);
         });
 
         // Button to go to notifications

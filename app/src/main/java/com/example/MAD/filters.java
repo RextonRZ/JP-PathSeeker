@@ -87,6 +87,14 @@ public class filters extends Fragment {
         // Radius SeekBar setup
         radiusSeekBar = rootView.findViewById(R.id.radiusSeekBar);
         radiusValue = rootView.findViewById(R.id.TVWithinKM);
+
+        if (getArguments() != null) {
+            latitude = getArguments().getDouble("LATITUDE", 0.0);
+            longitude = getArguments().getDouble("LONGITUDE", 0.0);
+            int savedRadius = getArguments().getInt("RADIUS", 100);
+            radiusSeekBar.setProgress(savedRadius);
+            radiusValue.setText("Within " + savedRadius + " km");
+        }
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
