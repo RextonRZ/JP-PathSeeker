@@ -83,7 +83,7 @@
 
             <EditText
                 android:id="@+id/emailInput"
-                android:layout_width="349dp"
+                android:layout_width="328dp"
                 android:layout_height="50dp"
                 android:autoText="false"
                 android:drawableEnd="@drawable/done_icon"
@@ -94,7 +94,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="13dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,17 +128,17 @@
 
             <EditText
                 android:id="@+id/dateOfBirth"
-                android:layout_width="349dp"
+                android:layout_width="331dp"
                 android:layout_height="48dp"
                 android:autoText="false"
+                android:drawableEnd="@drawable/calendar"
                 android:fontFamily="@font/judson"
                 android:hint="DD/MM/YYYY"
-                android:drawableEnd="@drawable/calendar"
                 android:textSize="14sp" />
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="13dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -166,10 +166,9 @@
                 android:spinnerMode="dropdown" />
 
 
-
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="13dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -181,7 +180,7 @@
 
             <EditText
                 android:id="@+id/passwordInput"
-                android:layout_width="347dp"
+                android:layout_width="333dp"
                 android:layout_height="48dp"
                 android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
@@ -191,7 +190,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="13dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -203,7 +202,7 @@
 
             <EditText
                 android:id="@+id/confirmPasswordInput"
-                android:layout_width="347dp"
+                android:layout_width="331dp"
                 android:layout_height="48dp"
                 android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
@@ -217,7 +216,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="13dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUpBtnJS"
@@ -260,9 +259,6 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="7dp" />
 
 
         </LinearLayout>

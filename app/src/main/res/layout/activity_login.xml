@@ -78,7 +78,7 @@
 
             <EditText
                 android:id="@+id/emailInput"
-                android:layout_width="349dp"
+                android:layout_width="325dp"
                 android:layout_height="54dp"
                 android:autoText="false"
                 android:fontFamily="@font/judson"
@@ -104,7 +104,7 @@
 
             <EditText
                 android:id="@+id/passwordInput"
-                android:layout_width="347dp"
+                android:layout_width="329dp"
                 android:layout_height="54dp"
                 android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"

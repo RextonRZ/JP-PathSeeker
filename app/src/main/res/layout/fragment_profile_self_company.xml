@@ -184,16 +184,17 @@
 
                 <Button
                     android:id="@+id/btnRetrieveLinkSelf"
-                    android:layout_width="169dp"
+                    android:layout_width="155dp"
                     android:layout_height="48dp"
-                    android:layout_marginTop="34dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="7dp"
                     android:backgroundTint="#F0801C"
                     android:fontFamily="@font/judson_bold"
                     android:text="Website Link"
                     android:textSize="20sp"
                     app:cornerRadius="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.645"
                     app:layout_constraintStart_toEndOf="@+id/textView49"
                     app:layout_constraintTop_toBottomOf="@+id/imageView14" />
 

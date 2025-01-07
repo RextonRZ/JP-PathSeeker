@@ -59,6 +59,7 @@
                     android:src="@drawable/findjobicon" />
 
                 <TextView
+                    android:id="@+id/jobText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/judson"

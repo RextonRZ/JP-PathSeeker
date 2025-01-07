@@ -6,9 +6,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +27,8 @@ public class Search_Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TextView jobText;
 
     public Search_Fragment() {
         // Required empty public constructor
@@ -62,6 +66,20 @@ public class Search_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_main_page, container, false);
+        jobText = view.findViewById(R.id.jobText);
+        view.post(() -> {
+//            try {
+            String dob = getCurrentDOB();
+            Log.d("JobMainFragment", "DOB value: " + dob);
+            if (dob != null && !dob.isEmpty()) {
+                jobText.setText("Find a Job");
+            } else {
+                jobText.setText("Post a Job");
+            }
+//            } catch (Exception e) {
+//                Log.e("ProfileIdentifyFragment", "Navigation error: " + e.getMessage());
+//            }
+        });
 
         CardView findAJobCard = view.findViewById(R.id.findAJobCard);
         findAJobCard.setOnClickListener(v -> {
@@ -97,5 +115,10 @@ public class Search_Fragment extends Fragment {
 
 
         return view;
+    }
+
+    private String getCurrentDOB() {
+        String dob = UserSessionManager.getInstance().getDob();
+        return dob != null ? dob : "";  // Return empty string if null
     }
 }

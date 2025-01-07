@@ -66,6 +66,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/rounded_top_corners"
             android:orientation="vertical"
+            android:layout_marginTop="0dp"
             android:padding="30dp">
 
             <View
@@ -74,7 +75,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="24dp" />
+                android:layout_height="23dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,11 +87,11 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="15dp" />
+                android:layout_height="9dp" />
 
             <EditText
                 android:id="@+id/emailInput"
-                android:layout_width="349dp"
+                android:layout_width="330dp"
                 android:layout_height="50dp"
                 android:autoText="false"
                 android:drawableEnd="@drawable/done_icon"
@@ -141,7 +142,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="17dp" />
+                android:layout_height="9dp" />
 
             <Spinner
                 android:id="@+id/sectorSpinner"
@@ -170,11 +171,11 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="15dp" />
+                android:layout_height="9dp" />
 
             <EditText
                 android:id="@+id/passwordInput"
-                android:layout_width="347dp"
+                android:layout_width="330dp"
                 android:layout_height="48dp"
                 android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
@@ -196,11 +197,11 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="15dp" />
+                android:layout_height="9dp" />
 
             <EditText
                 android:id="@+id/confirmPasswordInput"
-                android:layout_width="347dp"
+                android:layout_width="332dp"
                 android:layout_height="48dp"
                 android:drawableEnd="@drawable/eyeclose"
                 android:fontFamily="@font/judson"
@@ -214,7 +215,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="24dp" />
+                android:layout_height="22dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUpBtnR"
