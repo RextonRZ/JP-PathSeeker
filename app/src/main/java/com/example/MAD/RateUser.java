@@ -1,19 +1,22 @@
 package com.example.MAD;
 
-public class RateUser {
-    String rateUSer;
-    public RateUser() {
+import java.io.Serializable;
+
+public class RateUser implements Serializable {
+    private String rateUser;  // Renamed for better clarity
+
+    // Constructor
+    public RateUser(String rateUser) {
+        this.rateUser = rateUser;
     }
 
-    public RateUser(String rateUSer) {
-        this.rateUSer = rateUSer;
+    // Getter
+    public String getRateUser() {
+        return rateUser;
     }
 
-    public String getRateUSer() {
-        return rateUSer;
-    }
-
-    public void setRateUSer(String rateUSer) {
-        this.rateUSer = rateUSer;
+    // Setter
+    public void setRateUser(String rateUser) {
+        this.rateUser = rateUser;
     }
 }

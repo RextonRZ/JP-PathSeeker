@@ -174,8 +174,8 @@
 
                 <Button
                     android:id="@+id/btnLinkRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="170dp"
+                    android:layout_height="0dp"
                     android:layout_marginTop="34dp"
                     android:layout_marginEnd="24dp"
                     android:backgroundTint="#F0801C"
