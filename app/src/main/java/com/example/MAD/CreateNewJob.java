@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
@@ -70,18 +71,100 @@ public class CreateNewJob extends Fragment {
         ETJobSkills = view.findViewById(R.id.ETJobSkills);
 
         ImageButton btnBack = view.findViewById(R.id.IBback);
-        btnBack.setOnClickListener(v -> getActivity().getSupportFragmentManager().popBackStack());
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(requireView()).navigate(R.id.jobPostedFragment);
+            }
+        });
 
         ImageButton IBaddMedia = view.findViewById(R.id.IBaddMedia);
         IBaddMedia.setOnClickListener(v -> showImageSourceOptions());
 
         Button btnSaveJob = view.findViewById(R.id.btnSubmit);
         btnSaveJob.setOnClickListener(v -> {
-            saveJobToDatabase();
-            getActivity().getSupportFragmentManager().popBackStack();
+            if (validateInputs()) { // Add this method for input validation
+                saveJobToDatabase();
+                Navigation.findNavController(requireView()).navigate(R.id.jobPostedFragment);
+            } else {
+                Toast.makeText(getContext(), "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         return view;
+    }
+
+    private boolean validateInputs() {
+        String jobTitle = ETJobTitle.getText().toString().trim();
+        String location = ETLocation.getText().toString().trim();
+        String salaryString = ETSalary.getText().toString().trim();
+        String description = ETJobDesc.getText().toString().trim();
+        String skills = ETJobSkills.getText().toString().trim();
+
+        // Ensure fields are not empty
+        if (jobTitle.isEmpty() || location.isEmpty() || salaryString.isEmpty() ||
+                description.isEmpty() || skills.isEmpty()) {
+            Toast.makeText(getContext(), "All fields are required.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Ensure salary is numeric
+        try {
+            Double.parseDouble(salaryString);
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Salary must be a valid number.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Check for valid image
+        if (imageUri == null) {
+            Toast.makeText(getContext(), "Please upload an image.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Ensure at least one job type is selected
+        ArrayList<String> jobTypes = getSelectedOptions(new int[]{
+                R.id.CBFullTime, R.id.CBPartTime, R.id.CBContract, R.id.CBTemporary, R.id.CBInternship
+        }, new String[]{"Full-Time", "Part-Time", "Contract", "Temporary", "Internship"});
+
+        if (jobTypes.isEmpty()) {
+            Toast.makeText(getContext(), "Please select at least one job type.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Ensure at least one remote option is selected
+        ArrayList<String> remoteOptions = getSelectedOptions(new int[]{
+                R.id.CBRemote, R.id.CBOnSite, R.id.CBHybrid
+        }, new String[]{"Remote", "On-Site", "Hybrid"});
+
+        if (remoteOptions.isEmpty()) {
+            Toast.makeText(getContext(), "Please select at least one work type (Remote/On-Site/Hybrid).", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Ensure at least one experience level is selected
+        ArrayList<String> experienceLevels = getSelectedOptions(new int[]{
+                R.id.CBInternshipExp, R.id.CBEntryLevel, R.id.CBMidLevel, R.id.CBSeniorLevel, R.id.CBManagerial, R.id.CBExecutive, R.id.CBFreelance
+        }, new String[]{"Internship", "Entry-Level", "Mid-Level", "Senior-Level", "Managerial", "Executive", "Freelance"});
+
+        if (experienceLevels.isEmpty()) {
+            Toast.makeText(getContext(), "Please select at least one experience level.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Ensure at least one job category is selected
+        ArrayList<String> jobCategories = getSelectedOptions(new int[]{
+                R.id.CBTech, R.id.CBEngineering, R.id.CBHealth, R.id.CBBusiness, R.id.CBEdu, R.id.CBCreative, R.id.CBRetail, R.id.CBFood,
+                R.id.CBTransport, R.id.CBAdmin, R.id.CBLaw, R.id.CBScience, R.id.CBOthers
+        }, new String[]{"Technology", "Engineering", "Healthcare", "Business", "Education", "Creative", "Retail", "Food",
+                "Transportation", "Administrative", "Law", "Science", "Others"});
+
+        if (jobCategories.isEmpty()) {
+            Toast.makeText(getContext(), "Please select at least one job category.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void showImageSourceOptions() {
@@ -108,7 +191,7 @@ public class CreateNewJob extends Fragment {
                 Log.e("CreateNewJob", "Error creating file", ex);
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getContext(), "com.example.pathseekerapp.fileprovider", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(getContext(), "com.example.MAD.fileprovider", photoFile);
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI); // Save the image to this URI
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);

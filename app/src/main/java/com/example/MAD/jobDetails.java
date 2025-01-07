@@ -59,7 +59,7 @@ public class jobDetails extends Fragment {
     private TextView companyNameinCard;
     private String companyId;
     private JobTypeAdapter adapter;
-    private String username = "23004947@siswa_um_edu_my";
+    private String username,userEmail;
 
     private CardView CVClickCard;
 
@@ -67,6 +67,9 @@ public class jobDetails extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_job_details, container, false);
+
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username = userEmail.replace(".", "_");
 
         // Initialize UI elements
         jobTitle = view.findViewById(R.id.TVJobTitle);

@@ -1,8 +1,8 @@
 package com.example.MAD;
 
-import static android.app.Activity.RESULT_OK;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,30 +25,24 @@ import java.util.Arrays;
 import java.util.List;
 
 public class filters extends Fragment {
-    private double lat, lng;
 
-    private TextView dropdownJobTypeHeader, dropdownRemoteHeader, dropdownExperienceHeader, dropdownJobCategoryHeader;
+    private double latitude, longitude;
+    private TextView dropdownJobTypeHeader, dropdownRemoteHeader, dropdownExperienceHeader, dropdownJobCategoryHeader, radiusValue;
     private RecyclerView dropdownJobTypeRecyclerView, dropdownRemoteRecyclerView, dropdownExperienceRecyclerView, dropdownJobCategoryRecyclerView;
+    private SeekBar radiusSeekBar;
     private boolean isJobTypeExpanded = false, isRemoteExpanded = false, isExperienceExpanded = false, isJobCategoryExpanded = false;
 
-    // Data lists for dropdowns
-    List<String> jobTypes = new ArrayList<>(Arrays.asList("Full-Time", "Part-Time", "Contract", "Temporary", "Internship"));
-    List<Boolean> jobTypeSelections = new ArrayList<>(Arrays.asList(false, false, false, false, false));
+    private List<String> jobTypes = new ArrayList<>(Arrays.asList("Full-Time", "Part-Time", "Contract", "Temporary", "Internship"));
+    private List<Boolean> jobTypeSelections = new ArrayList<>(Arrays.asList(false, false, false, false, false));
 
-    List<String> remoteOptions = new ArrayList<>(Arrays.asList("On-Site", "Remote", "Hybrid"));
-    List<Boolean> remoteSelections = new ArrayList<>(Arrays.asList(false, false, false));
+    private List<String> remoteOptions = new ArrayList<>(Arrays.asList("On-Site", "Remote", "Hybrid"));
+    private List<Boolean> remoteSelections = new ArrayList<>(Arrays.asList(false, false, false));
 
-    List<String> experienceLevels = new ArrayList<>(Arrays.asList("Internship", "Entry-Level", "Mid-Level", "Senior-Level", "Managerial", "Executive", "Freelance"));
-    List<Boolean> experienceSelections = new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false));
+    private List<String> experienceLevels = new ArrayList<>(Arrays.asList("Internship", "Entry-Level", "Mid-Level", "Senior-Level", "Managerial", "Executive", "Freelance"));
+    private List<Boolean> experienceSelections = new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false));
 
-    List<String> jobCategory = new ArrayList<>(Arrays.asList("Technology", "Engineering", "Healthcare", "Business", "Education", "Creative", "Retail", "Food", "Transportation", "Administrative", "Law", "Science", "Others"));
-    List<Boolean> jobCategorySelections = new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false, false, false, false, false, false, false, false));
-
-    private SeekBar radiusSeekBar;
-    private TextView radiusValue;
-
-    private double latitude;  // Variable to hold latitude
-    private double longitude; // Variable to hold longitude
+    private List<String> jobCategory = new ArrayList<>(Arrays.asList("Technology", "Engineering", "Healthcare", "Business", "Education", "Creative", "Retail", "Food", "Transportation", "Administrative", "Law", "Science", "Others"));
+    private List<Boolean> jobCategorySelections = new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false, false, false, false, false, false, false));
 
     public filters() {
         // Required empty public constructor
@@ -56,44 +51,59 @@ public class filters extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_filters, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_filter, container, false);
 
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Location", Context.MODE_PRIVATE);
+        latitude = sharedPreferences.getFloat("LATITUDE", 0f);
+        longitude = sharedPreferences.getFloat("LONGITUDE", 0f);
         // Back button to return to previous page
-        ImageButton btnBack = view.findViewById(R.id.IBback);
+        ImageButton btnBack = rootView.findViewById(R.id.IBback);
         btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
 
-        // Navigate to Map when clicking Use Current Location
-        TextView tvUseLoc = view.findViewById(R.id.TVuseLoc);
+        // Navigate to Map when clicking "Use Current Location"
+        TextView tvUseLoc = rootView.findViewById(R.id.TVuseLoc);
         tvUseLoc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(requireView()).navigate(R.id.mapsFragment);
-            }
-        });
+                                        @Override
+                                        public void onClick(View v) {
+                                            Navigation.findNavController(requireView()).navigate(R.id.mapsFragment);
+                                        }
+                                    });
 
         // Job Type Dropdown
-        dropdownJobTypeHeader = view.findViewById(R.id.dropdownJobTypeHeader);
-        dropdownJobTypeRecyclerView = view.findViewById(R.id.dropdownJobTypeRecyclerView);
+        dropdownJobTypeHeader = rootView.findViewById(R.id.dropdownJobTypeHeader);
+        dropdownJobTypeRecyclerView = rootView.findViewById(R.id.dropdownJobTypeRecyclerView);
         setupDropdown(dropdownJobTypeHeader, dropdownJobTypeRecyclerView, jobTypes, jobTypeSelections, new boolean[]{isJobTypeExpanded});
 
         // Remote Dropdown
-        dropdownRemoteHeader = view.findViewById(R.id.dropdownRemoteHeader);
-        dropdownRemoteRecyclerView = view.findViewById(R.id.dropdownRemoteRecyclerView);
+        dropdownRemoteHeader = rootView.findViewById(R.id.dropdownRemoteHeader);
+        dropdownRemoteRecyclerView = rootView.findViewById(R.id.dropdownRemoteRecyclerView);
         setupDropdown(dropdownRemoteHeader, dropdownRemoteRecyclerView, remoteOptions, remoteSelections, new boolean[]{isRemoteExpanded});
 
         // Experience Dropdown
-        dropdownExperienceHeader = view.findViewById(R.id.dropdownExperienceHeader);
-        dropdownExperienceRecyclerView = view.findViewById(R.id.dropdownExperienceRecyclerView);
+        dropdownExperienceHeader = rootView.findViewById(R.id.dropdownExperienceHeader);
+        dropdownExperienceRecyclerView = rootView.findViewById(R.id.dropdownExperienceRecyclerView);
         setupDropdown(dropdownExperienceHeader, dropdownExperienceRecyclerView, experienceLevels, experienceSelections, new boolean[]{isExperienceExpanded});
 
-        // Category Dropdown
-        dropdownJobCategoryHeader = view.findViewById(R.id.dropdownJobCategoryHeader);
-        dropdownJobCategoryRecyclerView = view.findViewById(R.id.dropdownJobCategoryRecyclerView);
+        // Job Category Dropdown
+        dropdownJobCategoryHeader = rootView.findViewById(R.id.dropdownJobCategoryHeader);
+        dropdownJobCategoryRecyclerView = rootView.findViewById(R.id.dropdownJobCategoryRecyclerView);
         setupDropdown(dropdownJobCategoryHeader, dropdownJobCategoryRecyclerView, jobCategory, jobCategorySelections, new boolean[]{isJobCategoryExpanded});
 
-        // Update the radius value display as the user moves the slider
-        radiusSeekBar = view.findViewById(R.id.radiusSeekBar);
-        radiusValue = view.findViewById(R.id.TVWithinKM);
+        // Radius SeekBar setup
+        radiusSeekBar = rootView.findViewById(R.id.radiusSeekBar);
+        radiusValue = rootView.findViewById(R.id.TVWithinKM);
+
+        if (getArguments() != null) {
+            latitude = getArguments().getDouble("LATITUDE", latitude);
+            longitude = getArguments().getDouble("LONGITUDE", longitude);
+            int savedRadius = getArguments().getInt("RADIUS", sharedPreferences.getInt("RADIUS", 100));
+            radiusSeekBar.setProgress(savedRadius);
+            radiusValue.setText("Within " + savedRadius + " km");
+        } else {
+            int savedRadius = sharedPreferences.getInt("RADIUS", 100);
+            radiusSeekBar.setProgress(savedRadius);
+            radiusValue.setText("Within " + savedRadius + " km");
+        }
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -107,8 +117,17 @@ public class filters extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        Button btnApplyFilters = view.findViewById(R.id.btnApply);
+        // Apply filters button
+        Button btnApplyFilters = rootView.findViewById(R.id.btnApply);
         btnApplyFilters.setOnClickListener(v -> {
+            // Update SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putFloat("LATITUDE", (float) latitude);
+            editor.putFloat("LONGITUDE", (float) longitude);
+            editor.putInt("RADIUS", radiusSeekBar.getProgress());
+            editor.apply();
+
+
             // Create a bundle to pass data to the jobSearchFragment
             Bundle bundle = new Bundle();
 
@@ -126,7 +145,7 @@ public class filters extends Fragment {
             Navigation.findNavController(requireView()).navigate(R.id.jobSearchFragment, bundle);
         });
 
-        return view;
+        return rootView;
     }
 
     private void setupDropdown(TextView header, RecyclerView recyclerView, List<String> items, List<Boolean> selections, boolean[] isExpanded) {
@@ -139,19 +158,11 @@ public class filters extends Fragment {
 
     private void toggleDropdown(RecyclerView recyclerView, TextView header, boolean[] isExpanded) {
         boolean currentState = recyclerView.getVisibility() == View.VISIBLE;
-
-        // Set visibility
         recyclerView.setVisibility(currentState ? View.GONE : View.VISIBLE);
-
-        // Adjust height dynamically
         recyclerView.getLayoutParams().height = currentState ? 0 : RecyclerView.LayoutParams.WRAP_CONTENT;
         recyclerView.requestLayout();
-
-        // Update arrow icon
-        header.setCompoundDrawablesWithIntrinsicBounds(
-                0, 0, currentState ? R.drawable.baseline_keyboard_arrow_down_24 : R.drawable.baseline_keyboard_arrow_up_24, 0);
-
-        isExpanded[0] = !currentState; // Toggle expansion state
+        header.setCompoundDrawablesWithIntrinsicBounds(0, 0, currentState ? R.drawable.baseline_keyboard_arrow_down_24 : R.drawable.baseline_keyboard_arrow_up_24, 0);
+        isExpanded[0] = !currentState;
     }
 
     private void updateHeaderText(TextView header, List<String> items, List<Boolean> selections) {
@@ -163,11 +174,10 @@ public class filters extends Fragment {
         }
 
         if (selectedText.length() > 0) {
-            selectedText.setLength(selectedText.length() - 2); // Remove trailing comma
+            selectedText.setLength(selectedText.length() - 2);
             header.setText(selectedText.toString());
         } else {
-            // Reset to the default title if no items are selected
-            header.setText(header.getHint()); // Ensure the `hint` attribute is set in XML
+            header.setText(header.getHint());
         }
     }
 

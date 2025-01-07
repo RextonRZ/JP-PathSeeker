@@ -125,8 +125,10 @@ public class ProfileSeekerSettingFragment extends Fragment {
     }
 
     private void navigateToLoginScreen() {
-        Intent intent = new Intent(requireContext(), Login.class); // Change to your login activity
+        Intent intent = new Intent(requireActivity(), Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Clear back stack
         startActivity(intent);
+        requireActivity().finish();  // Finish the current activity to ensure it's removed from the stack
     }
 
     private void showLogOutDialog() {

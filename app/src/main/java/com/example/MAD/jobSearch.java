@@ -64,6 +64,8 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
 
     private View view;
 
+    private String userEmail;
+
 
     @Nullable
     @Override
@@ -74,8 +76,10 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
         lat = sharedPreferences.getFloat("LATITUDE", 0f);
         lng = sharedPreferences.getFloat("LONGITUDE", 0f);
         radius = sharedPreferences.getInt("RADIUS", 100);
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username = userEmail.replace(".", "_");
 
-        username = "23004947@siswa_um_edu_my";
+
 
         // Initialize RecyclerView and Adapter
         RecyclerView recyclerView = view.findViewById(R.id.RVjob);
@@ -97,7 +101,11 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
         // Filter button to navigate to filter page
         ImageButton btnFilter = view.findViewById(R.id.IBfilter);
         btnFilter.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.jobFilterFragment);
+            Bundle bundle = new Bundle();
+            bundle.putDouble("LATITUDE", lat);
+            bundle.putDouble("LONGITUDE", lng);
+            bundle.putInt("RADIUS", radius);
+            Navigation.findNavController(requireView()).navigate(R.id.jobFilterFragment, bundle);
         });
 
         // Button to go to notifications

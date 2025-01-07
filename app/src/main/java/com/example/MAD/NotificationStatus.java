@@ -33,13 +33,14 @@ public class NotificationStatus extends Fragment {
     private ArrayList<Application> interviewJobs = new ArrayList<>();
     private RecyclerView recyclerViewApplied, recyclerViewSuccess, recyclerViewRejected, recyclerViewInterview;
     private TextView applied, success, rejected, interview;
-    private String username;
+    private String username,userEmail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notification_status, container, false);
 
-        username = "23004947@siswa_um_edu_my";
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username = userEmail.replace(".", "_");
 
         applied = rootView.findViewById(R.id.TVApplied);
         success = rootView.findViewById(R.id.TVSuccess);
