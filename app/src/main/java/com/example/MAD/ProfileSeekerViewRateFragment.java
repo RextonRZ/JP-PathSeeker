@@ -339,7 +339,7 @@ public class ProfileSeekerViewRateFragment extends Fragment {
     private void showCustomDialog() {
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.rating_dialog);
-        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_box));
+        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_boxs));
         dialog.show();
 
         Button BtnCancel = dialog.findViewById(R.id.BtnCancel);
@@ -359,7 +359,7 @@ public class ProfileSeekerViewRateFragment extends Fragment {
     private void showSuccessRating() {
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.pop_up_message);
-        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_box));
+        dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_boxs));
 
         TextView successRating = dialog.findViewById(R.id.text1);
         successRating.setText("You rated " + " as " + rating + " star!");

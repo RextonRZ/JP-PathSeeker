@@ -100,7 +100,23 @@ public class AppHomePage extends AppCompatActivity {
                     destination.getId() == R.id.scheduleFragment ||
                     destination.getId() == R.id.calendarFragment) {
                 bottomNav.getMenu().findItem(R.id.careerFragment).setChecked(true);
-            } else {
+            } else if(destination.getId()==R.id.searchFragment||
+                    destination.getId() == R.id.courseFragment||
+                    destination.getId() == R.id.partnershipProgramFragment||
+                    destination.getId() == R.id.courseDetailsFragment){
+                    bottomNav.getMenu().findItem(R.id.searchFragment).setChecked(true);
+            } else if(destination.getId()==R.id.profileFragment||
+                    destination.getId() == R.id.selfCompanyFragment||
+                    destination.getId() == R.id.selfSeekerFragment||
+                    destination.getId() == R.id.companyEditFragment||
+                    destination.getId() == R.id.seekerEditFragment||
+                    destination.getId() == R.id.seekerSettingFragment||
+                    destination.getId() == R.id.seekerViewRateFragment||
+                    destination.getId() == R.id.companyViewRateFragment){
+                bottomNav.getMenu().findItem(R.id.profileFragment).setChecked(true);
+            }
+
+            else {
                 // For other destinations, check the corresponding menu item
                 MenuItem item = bottomNav.getMenu().findItem(destination.getId());
                 if (item != null) {
