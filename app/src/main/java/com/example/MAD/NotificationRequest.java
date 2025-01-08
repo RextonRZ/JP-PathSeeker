@@ -47,13 +47,7 @@ public class NotificationRequest extends Fragment {
 
         // Initialize and set the click listener for the ImageButton
         ImageButton btnBack = view.findViewById(R.id.IBback);
-        btnBack.setOnClickListener(v -> {
-            // Navigate to jobSearch Fragment (use the appropriate fragment transaction)
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new jobPosted())
-                    .addToBackStack(null)
-                    .commit();
-        });
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
 
         applicationList = new ArrayList<>();
 
