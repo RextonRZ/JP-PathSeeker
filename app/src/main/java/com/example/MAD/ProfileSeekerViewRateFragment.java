@@ -472,7 +472,7 @@ public class ProfileSeekerViewRateFragment extends Fragment {
             float averageScore = totalScore / ratingCount;
             ratingTextView.setText(String.format("%.1f", averageScore));
         } else {
-            ratingTextView.setText("No ratings yet");
+            ratingTextView.setText("0");
         }
     }
 

@@ -46,8 +46,12 @@ public class ProfileSelfCompanyFragment extends Fragment {
     private Uri url;
     private final ArrayList<jobOffered> jobList = new ArrayList<>();
 
+    private TextView rateComp;
+
     String userEmail = UserSessionManager.getInstance().getUserEmail();
     String sanitizedEmail = userEmail.replace(".", "_");
+
+    DatabaseReference ratingRef;
 
     @Nullable
     @Override
@@ -60,6 +64,7 @@ public class ProfileSelfCompanyFragment extends Fragment {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        rateComp = view.findViewById(R.id.rateComp);
 
         // Initialize buttons and their actions
         ImageButton btnSetting = view.findViewById(R.id.btnSettingCompany);
@@ -67,7 +72,6 @@ public class ProfileSelfCompanyFragment extends Fragment {
 
         btnSetting.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.companySettingFragment));
         btnEditProfile.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.companyEditFragment));
-
         // Initialize RecyclerView and adapter
         RVJob = view.findViewById(R.id.RVJob);
         adapter = new RecycleviewJobOfferedAdapter(getContext(), jobList);
@@ -75,7 +79,8 @@ public class ProfileSelfCompanyFragment extends Fragment {
         RVJob.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("recruiter").child(sanitizedEmail);
-
+        ratingRef = userRef.child("rating");
+        fetchAndDisplayAverageRating();
         nameSelfCom = view.findViewById(R.id.nameSelfCom);
         nameSelfCom.setText(UserSessionManager.getInstance().getUserName());
 
@@ -236,4 +241,45 @@ public class ProfileSelfCompanyFragment extends Fragment {
             }
         });
     }
+
+    private void fetchAndDisplayAverageRating() {
+        // Reference to the rating node under the user
+
+        // Fetch ratings and calculate the average
+        ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float totalScore = 0;
+                int ratingCount = 0;
+
+                // Loop through each rating entry
+                for (DataSnapshot ratingSnapshot : dataSnapshot.getChildren()) {
+                    Float score = ratingSnapshot.child("score").getValue(Float.class);
+                    if (score != null) {
+                        totalScore += score;
+                        ratingCount++;
+                    }
+                }
+
+                // Calculate and display the average rating
+                displayAverageRating(totalScore, ratingCount);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error fetching ratings: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void displayAverageRating(float totalScore, int ratingCount) {
+        if (ratingCount > 0) {
+            // Calculate average score
+            float averageScore = totalScore / ratingCount;
+            rateComp.setText(String.format("%.1f", averageScore));
+        } else {
+            rateComp.setText("0");
+        }
+    }
+
 }

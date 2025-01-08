@@ -53,12 +53,15 @@ public class ProfileSelfSeekerFragment extends Fragment {
 
     Button btnRetrievePDF2;
 
+    TextView textView43;
+
+    private DatabaseReference ratingRef;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the fragment layout
         View view = inflater.inflate(R.layout.fragment_profile_seeker_self, container, false);
-
         // Set up window insets
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -68,7 +71,7 @@ public class ProfileSelfSeekerFragment extends Fragment {
 
         ImageButton btnSetting = view.findViewById(R.id.btnSetting2);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile3);
-
+        textView43 = view.findViewById(R.id.textView43);
         // Set click listeners
         btnSetting.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.seekerSettingFragment));
 
@@ -79,7 +82,8 @@ public class ProfileSelfSeekerFragment extends Fragment {
         if (userEmail != null && !userEmail.isEmpty()) {
             String sanitizedEmail = userEmail.replace(".", "_");
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("jobseeker").child(sanitizedEmail);
-
+            ratingRef = userRef.child("rating");
+            fetchAndDisplayAverageRating();
             // Initialize RecyclerView for Skills
             RVSkill = view.findViewById(R.id.RVSkill);
             adapter = new RecycleviewSkillAdapter(requireContext(), skillList);
@@ -303,6 +307,46 @@ public class ProfileSelfSeekerFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(requireContext(), "Error saving PDF", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchAndDisplayAverageRating() {
+        // Reference to the rating node under the user
+
+        // Fetch ratings and calculate the average
+        ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float totalScore = 0;
+                int ratingCount = 0;
+
+                // Loop through each rating entry
+                for (DataSnapshot ratingSnapshot : dataSnapshot.getChildren()) {
+                    Float score = ratingSnapshot.child("score").getValue(Float.class);
+                    if (score != null) {
+                        totalScore += score;
+                        ratingCount++;
+                    }
+                }
+
+                // Calculate and display the average rating
+                displayAverageRating(totalScore, ratingCount);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error fetching ratings: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void displayAverageRating(float totalScore, int ratingCount) {
+        if (ratingCount > 0) {
+            // Calculate average score
+            float averageScore = totalScore / ratingCount;
+            textView43.setText(String.format("%.1f", averageScore));
+        } else {
+            textView43.setText("0");
         }
     }
 
