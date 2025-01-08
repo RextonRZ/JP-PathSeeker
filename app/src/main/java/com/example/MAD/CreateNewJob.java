@@ -71,12 +71,7 @@ public class CreateNewJob extends Fragment {
         ETJobSkills = view.findViewById(R.id.ETJobSkills);
 
         ImageButton btnBack = view.findViewById(R.id.IBback);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(requireView()).navigate(R.id.jobPostedFragment);
-            }
-        });
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
 
         ImageButton IBaddMedia = view.findViewById(R.id.IBaddMedia);
         IBaddMedia.setOnClickListener(v -> showImageSourceOptions());
