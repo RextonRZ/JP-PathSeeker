@@ -102,9 +102,7 @@ public class jobDetails extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                // Pass both jobId and companyId
-                bundle.putString("rateUser", companyId); // Pass the company ID instead of job ID
-                bundle.putString("jobId", jobId);
+                bundle.putString("rateUser", companyId); // Pass the company ID
 
                 Navigation.findNavController(requireView())
                         .navigate(R.id.profileCompanyViewRate, bundle); // Pass the bundle to navigate()

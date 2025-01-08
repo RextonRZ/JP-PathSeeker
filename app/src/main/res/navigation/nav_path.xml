@@ -141,9 +141,9 @@
         android:label="companyViewRateFragment" />
 
     <fragment
-        android:id="@+id/seekerViewRateFragment"
+        android:id="@+id/profileSeekerViewRate"
         android:name="com.example.MAD.ProfileSeekerViewRateFragment"
-        android:label="seekerViewRateFragment" />
+        android:label="profileSeekerViewRate" />
 
     <fragment
         android:id="@+id/courseFragment"

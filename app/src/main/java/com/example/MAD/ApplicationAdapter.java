@@ -5,7 +5,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
@@ -85,6 +88,15 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
             applicationList.remove(position); // Remove the application from the list
             notifyItemRemoved(position); // Notify adapter that item has been removed
         });
+
+        holder.viewProfile.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("rateSeeker", application.getUserId());
+            Log.d("Debug",application.getApplicantName());
+
+            Navigation.findNavController(v)
+                    .navigate(R.id.profileSeekerViewRate, bundle);
+        });
     }
 
     public void decodeBase64(String base64String, ImageView imageView) {
@@ -104,7 +116,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
 
     // ViewHolder class
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, positionTextView, jobTypeTextView;
+        TextView nameTextView, positionTextView, jobTypeTextView,viewProfile;
         ShapeableImageView profile;
         Button acceptButton, rejectButton, scheduleInterview;
 
@@ -117,6 +129,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
             acceptButton = itemView.findViewById(R.id.btnAccept);
             rejectButton = itemView.findViewById(R.id.btnReject);
             scheduleInterview = itemView.findViewById(R.id.btnScheduleIV);
+            viewProfile=itemView.findViewById(R.id.TVviewProfile);
         }
     }
 
@@ -242,4 +255,3 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     }
 
 }
-

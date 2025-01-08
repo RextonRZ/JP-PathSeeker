@@ -124,7 +124,7 @@ public class AppHomePage extends AppCompatActivity {
                     destination.getId() == R.id.companyEditFragment||
                     destination.getId() == R.id.seekerEditFragment||
                     destination.getId() == R.id.seekerSettingFragment||
-                    destination.getId() == R.id.seekerViewRateFragment||
+                    destination.getId() == R.id.profileSeekerViewRate||
                     destination.getId() == R.id.companyViewRateFragment){
                 bottomNav.getMenu().findItem(R.id.profileFragment).setChecked(true);
             }

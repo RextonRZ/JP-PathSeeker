@@ -39,114 +39,115 @@ public class ProfileCompanyViewRateFragment extends Fragment {
     private ArrayList<jobOffered> jobList = new ArrayList<>();
     private float rating;
 
+
     private ImageView profilePhotoRate2;
-    private TextView nameRate2, sectorRate, jobRate, bioRate2;
+    private TextView nameRate2, sectorRate, jobRate, bioRate2,text1;
     private Button btnLinkRate;
     private Uri url;
-    DatabaseReference userRef;
+    DatabaseReference userRef, pplRateRef;
     String jobId;
     String userEmail;
+    String pplRateMail;
     String sanitizedEmail;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_company_view_rate, container, false);
 
+        // Check if arguments are passed correctly
         if (getArguments() != null) {
-            jobId = getArguments().getString("jobId");
             userEmail = getArguments().getString("rateUser");
 
             if (userEmail != null) {
-                sanitizedEmail = userEmail.replace(".", "_");
+                sanitizedEmail = userEmail.replace(".", "_"); // sanitize the email for Firebase reference
                 userRef = FirebaseDatabase.getInstance().getReference("users").child("recruiter").child(sanitizedEmail);
-                // Now you can use userRef to fetch company details
 
-                // Debug logging
-                Log.d("ProfileCompanyViewRate", "JobID: " + jobId);
-                Log.d("ProfileCompanyViewRate", "UserEmail: " + userEmail);
-                Log.d("ProfileCompanyViewRate", "SanitizedEmail: " + sanitizedEmail);
-            } else {
-                Log.e("ProfileCompanyViewRate", "User email is null");
-                Toast.makeText(requireContext(), "Error: Company information not found", Toast.LENGTH_SHORT).show();
+                // Initialize RecyclerView
+                RVJob = view.findViewById(R.id.RVJobRate);
+                adapter = new RecycleviewJobOfferedAdapter(requireContext(), jobList);
+                RVJob.setAdapter(adapter);
+                RVJob.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                // Set up the user's name
+                nameRate2 = view.findViewById(R.id.nameRate2);
+                userRef.child("companyName").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String name = dataSnapshot.getValue(String.class);
+                        if (name != null) {
+                            nameRate2.setText(name);
+                        } else {
+                            nameRate2.setText("Name not available");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("YourFragment", "Error fetching user name: " + databaseError.getMessage());
+                    }
+                });
+
+                // Set up the user's sector
+                sectorRate = view.findViewById(R.id.sectorRate);
+                userRef.child("sector").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String sector = dataSnapshot.getValue(String.class);
+                        if (sector != null) {
+                            sectorRate.setText(sector);
+                        } else {
+                            sectorRate.setText("Sector not available");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("YourFragment", "Error fetching sector: " + databaseError.getMessage());
+                    }
+                });
+
+                // Access bio and profile photo
+                bioRate2 = view.findViewById(R.id.bioRate2);
+                accessBio(userRef);
+
+                profilePhotoRate2 = view.findViewById(R.id.profilePhotoRate2);
+                accessProfile(userRef);
+
+                // Set up job data
+                jobRate = view.findViewById(R.id.jobRate);
+                setUpJob();
+
+                // Handle the external link button
+                btnLinkRate = view.findViewById(R.id.btnLinkRate);
+                accessLink(userRef);
+
+                btnLinkRate.setOnClickListener(v -> {
+                    // Validate the URL format
+                    if (url != null && Patterns.WEB_URL.matcher(url.toString()).matches()) {
+                        // If the URL is valid, launch it in a browser
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, url);
+                        startActivity(browserIntent);
+                    } else {
+                        // If the URL is invalid, show a toast message
+                        Toast.makeText(requireContext(), "Invalid URL. Please check the URL and try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                TextView ratingTextView = view.findViewById(R.id.rating2);
+                fetchAndDisplayAverageRating();
+
+                // Handle "Rate Company" button click
+                Button showDialogButton = view.findViewById(R.id.btnRateCompany);
+                showDialogButton.setOnClickListener(v -> showCustomDialog());
+
             }
         } else {
-            Log.e("ProfileCompanyViewRate", "No arguments passed to fragment");
-            Toast.makeText(requireContext(), "Error: No company information provided", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "User email is missing", Toast.LENGTH_SHORT).show();
         }
 
-        // Initialize RecyclerView
-        RVJob = view.findViewById(R.id.RVJobRate);
-        adapter = new RecycleviewJobOfferedAdapter(requireContext(), jobList);
-        RVJob.setAdapter(adapter);
-        RVJob.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-
-        nameRate2 = view.findViewById(R.id.nameRate2);
-        userRef.child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.getValue(String.class);
-                if (name != null) {
-                    nameRate2.setText(name);
-                } else {
-                    nameRate2.setText("Name not available");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("YourFragment", "Error fetching user name: " + databaseError.getMessage());
-            }
-        });
-
-        sectorRate = view.findViewById(R.id.sectorRate);
-        userRef.child("sector").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.getValue(String.class);
-                if (name != null) {
-                    sectorRate.setText(name);
-                } else {
-                    sectorRate.setText("Status not available");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("YourFragment", "Error fetching sector: " + databaseError.getMessage());
-            }
-        });
-
-        bioRate2 = view.findViewById(R.id.bioRate2);
-        accessBio(userRef);
-
-        profilePhotoRate2 = view.findViewById(R.id.profilePhotoRate2);
-        accessProfile(userRef);
-
-        jobRate = view.findViewById(R.id.jobRate);
-        // Load data into RecyclerView
-        setUpJob();
-
-        btnLinkRate = view.findViewById(R.id.btnLinkRate);
-        accessLink(userRef);
-
-        btnLinkRate.setOnClickListener(v -> {
-            // Validate the URL format
-            if (url != null && Patterns.WEB_URL.matcher(url.toString()).matches()) {
-                // If the URL is valid, launch it in a browser
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, url);
-                startActivity(browserIntent);
-            } else {
-                // If the URL is invalid, show a toast message
-                Toast.makeText(requireContext(), "Invalid URL. Please check the URL and try again.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Handle "Rate Company" button click
-        Button showDialogButton = view.findViewById(R.id.btnRateCompany);
-        showDialogButton.setOnClickListener(v -> showCustomDialog());
-
-        return view;
+        return view; // Always return the view
     }
 
     private void accessBio(DatabaseReference userRef) {
@@ -284,10 +285,31 @@ public class ProfileCompanyViewRateFragment extends Fragment {
         dialog.setContentView(R.layout.rating_dialog);
         dialog.getWindow().setBackgroundDrawable(requireContext().getDrawable(R.drawable.dialog_boxs));
 
+        // Initialize the text view to display company name
+        text1 = dialog.findViewById(R.id.text1);
+
+        // Fetch company name from the database
+        userRef.child("companyName").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String existingText = dataSnapshot.getValue(String.class);
+                    if (existingText != null) {
+                        text1.setText("Rate " + existingText);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error checking for existing company name: " + databaseError.getMessage());
+            }
+        });
+
         // Show the dialog
         dialog.show();
 
-        // Set a button's functionality to dismiss the dialog
+        // Set up cancel button
         Button BtnCancel = dialog.findViewById(R.id.BtnCancel);
         BtnCancel.setOnClickListener(v -> dialog.dismiss());
 
@@ -297,14 +319,110 @@ public class ProfileCompanyViewRateFragment extends Fragment {
         // Handle BtnRate click
         BtnRate.setOnClickListener(v -> {
             RatingBar ratingBar = dialog.findViewById(R.id.rating);
-            rating = ratingBar.getRating();
+            rating = ratingBar.getRating(); // Get rating value
+            pplRateMail = UserSessionManager.getInstance().getUserEmail();
 
             if (rating != 0) {
+                // Reference to the rating node
+                DatabaseReference ratingRef = userRef.child("rating");
+
+                // Create a Rating object
+                Rating ratingObj = new Rating(pplRateMail, rating);
+
+                // Check if the rating already exists for this particular user (pplRateMail)
+                ratingRef.orderByChild("pplRate").equalTo(pplRateMail).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Rating exists for this user, so we update it
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String ratingId = snapshot.getKey();  // Get the unique rating ID
+                                ratingRef.child(ratingId).child("score").setValue(rating)  // Update the score
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                // **Fetch and display the updated average rating after submission**
+                                                fetchAndDisplayAverageRating();
+                                                Toast.makeText(requireContext(), "Rating updated successfully.", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(requireContext(), "Error updating rating. Please try again.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        } else {
+                            // Rating does not exist, create a new one
+                            String ratingId = ratingRef.push().getKey();  // Create a new unique rating ID
+                            if (ratingId != null) {
+                                ratingRef.child(ratingId).setValue(ratingObj).addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        // **Fetch and display the updated average rating after submission**
+                                        fetchAndDisplayAverageRating();
+                                        Toast.makeText(requireContext(), "Rating saved successfully.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(requireContext(), "Error saving rating. Please try again.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("Firebase", "Error checking for existing rating: " + databaseError.getMessage());
+                    }
+                });
+
                 dialog.dismiss();
                 showSuccessRating();
+            } else {
+                Toast.makeText(requireContext(), "Please select a rating before submitting.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+    private void fetchAndDisplayAverageRating() {
+        // Reference to the rating node under the user
+        DatabaseReference ratingRef = userRef.child("rating");
+
+        // Fetch ratings and calculate the average
+        ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float totalScore = 0;
+                int ratingCount = 0;
+
+                // Loop through each rating entry
+                for (DataSnapshot ratingSnapshot : dataSnapshot.getChildren()) {
+                    Float score = ratingSnapshot.child("score").getValue(Float.class);
+                    if (score != null) {
+                        totalScore += score;
+                        ratingCount++;
+                    }
+                }
+
+                // Calculate and display the average rating
+                displayAverageRating(totalScore, ratingCount);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseError", "Error fetching ratings: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void displayAverageRating(float totalScore, int ratingCount) {
+        TextView ratingTextView = getView().findViewById(R.id.rating2);
+
+        if (ratingCount > 0) {
+            // Calculate average score
+            float averageScore = totalScore / ratingCount;
+            ratingTextView.setText(String.format("%.1f", averageScore));
+        } else {
+            ratingTextView.setText("No ratings yet");
+        }
+    }
+
 
     private void showSuccessRating() {
         Dialog dialog = new Dialog(requireContext());
@@ -316,5 +434,34 @@ public class ProfileCompanyViewRateFragment extends Fragment {
 
         // Show the dialog
         dialog.show();
+    }
+}
+
+class Rating {
+    private String pplRate;
+    private float score;
+
+    // Default constructor required for Firebase
+    public Rating() {}
+
+    public Rating(String pplRate, float score) {
+        this.pplRate = pplRate;
+        this.score = score;
+    }
+
+    public String getPplRate() {
+        return pplRate;
+    }
+
+    public void setPplRate(String pplRate) {
+        this.pplRate = pplRate;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
     }
 }
