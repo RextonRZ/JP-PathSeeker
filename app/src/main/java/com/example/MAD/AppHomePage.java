@@ -82,6 +82,7 @@ public class AppHomePage extends AppCompatActivity {
             return false;
         });
 
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             // Clear all selections first
             for (int i = 0; i < bottomNav.getMenu().size(); i++) {

@@ -50,6 +50,7 @@ public class CreateNewJob extends Fragment {
     private EditText ETJobTitle, ETLocation, ETSalary, ETJobDesc, ETJobSkills;
     private Uri imageUri;
     String username;
+    private String userEmail;
 
     public CreateNewJob() {
         // Required empty public constructor
@@ -61,7 +62,8 @@ public class CreateNewJob extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_new_job, container, false);
 
-        username = "balaena@gmail_com";
+        userEmail = UserSessionManager.getInstance().getUserEmail();
+        username = userEmail.replace(".", "_");
 
         IVPreview = view.findViewById(R.id.IVPreview);
         ETJobTitle = view.findViewById(R.id.ETJobTitle);
@@ -71,7 +73,7 @@ public class CreateNewJob extends Fragment {
         ETJobSkills = view.findViewById(R.id.ETJobSkills);
 
         ImageButton btnBack = view.findViewById(R.id.IBback);
-        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+        btnBack.setOnClickListener(v->requireActivity().onBackPressed());
 
         ImageButton IBaddMedia = view.findViewById(R.id.IBaddMedia);
         IBaddMedia.setOnClickListener(v -> showImageSourceOptions());
