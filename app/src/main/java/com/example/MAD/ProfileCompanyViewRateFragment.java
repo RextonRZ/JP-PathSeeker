@@ -48,17 +48,13 @@ public class ProfileCompanyViewRateFragment extends Fragment {
     String jobId;
     String userEmail;
     String pplRateMail;
-    String sanitizedEmail, saniPplRate;
+    String sanitizedEmail;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_company_view_rate, container, false);
-
-        pplRateMail = UserSessionManager.getInstance().getUserEmail();
-        saniPplRate = pplRateMail.replace(".","_");
-        pplRateRef = FirebaseDatabase.getInstance().getReference("users").child("recruiter").child(saniPplRate);
 
         // Check if arguments are passed correctly
         if (getArguments() != null) {
@@ -139,11 +135,13 @@ public class ProfileCompanyViewRateFragment extends Fragment {
                     }
                 });
 
+                TextView ratingTextView = view.findViewById(R.id.rating2);
+                fetchAndDisplayAverageRating();
+
                 // Handle "Rate Company" button click
                 Button showDialogButton = view.findViewById(R.id.btnRateCompany);
                 showDialogButton.setOnClickListener(v -> showCustomDialog());
 
-                fetchAndDisplayAverageRating();
             }
         } else {
             Toast.makeText(requireContext(), "User email is missing", Toast.LENGTH_SHORT).show();
@@ -322,6 +320,7 @@ public class ProfileCompanyViewRateFragment extends Fragment {
         BtnRate.setOnClickListener(v -> {
             RatingBar ratingBar = dialog.findViewById(R.id.rating);
             rating = ratingBar.getRating(); // Get rating value
+            pplRateMail = UserSessionManager.getInstance().getUserEmail();
 
             if (rating != 0) {
                 // Reference to the rating node
@@ -341,6 +340,8 @@ public class ProfileCompanyViewRateFragment extends Fragment {
                                 ratingRef.child(ratingId).child("score").setValue(rating)  // Update the score
                                         .addOnCompleteListener(task -> {
                                             if (task.isSuccessful()) {
+                                                // **Fetch and display the updated average rating after submission**
+                                                fetchAndDisplayAverageRating();
                                                 Toast.makeText(requireContext(), "Rating updated successfully.", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 Toast.makeText(requireContext(), "Error updating rating. Please try again.", Toast.LENGTH_SHORT).show();
@@ -353,6 +354,8 @@ public class ProfileCompanyViewRateFragment extends Fragment {
                             if (ratingId != null) {
                                 ratingRef.child(ratingId).setValue(ratingObj).addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
+                                        // **Fetch and display the updated average rating after submission**
+                                        fetchAndDisplayAverageRating();
                                         Toast.makeText(requireContext(), "Rating saved successfully.", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(requireContext(), "Error saving rating. Please try again.", Toast.LENGTH_SHORT).show();
@@ -370,7 +373,6 @@ public class ProfileCompanyViewRateFragment extends Fragment {
 
                 dialog.dismiss();
                 showSuccessRating();
-                fetchAndDisplayAverageRating();
             } else {
                 Toast.makeText(requireContext(), "Please select a rating before submitting.", Toast.LENGTH_SHORT).show();
             }

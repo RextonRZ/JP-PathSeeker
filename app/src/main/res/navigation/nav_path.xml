@@ -218,6 +218,10 @@
         android:name="com.example.MAD.ProfileCompanyViewRateFragment"
         android:label="profileCompanyViewRate" />
     <fragment
+        android:id="@+id/profileSeekerViewRate"
+        android:name="com.example.MAD.ProfileSeekerViewRateFragment"
+        android:label="profileSeekerViewRate" />
+    <fragment
         android:id="@+id/notiRequestFragment"
         android:name="com.example.MAD.NotificationRequest"
         android:label="notiRequestFragment" />
