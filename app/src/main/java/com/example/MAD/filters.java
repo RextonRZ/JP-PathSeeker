@@ -54,6 +54,9 @@ public class filters extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_filter, container, false);
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Location", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("RADIUS", 100);
+        editor.apply();
         latitude = sharedPreferences.getFloat("LATITUDE", 0f);
         longitude = sharedPreferences.getFloat("LONGITUDE", 0f);
         // Back button to return to previous page
@@ -93,20 +96,28 @@ public class filters extends Fragment {
         radiusSeekBar = rootView.findViewById(R.id.radiusSeekBar);
         radiusValue = rootView.findViewById(R.id.TVWithinKM);
 
+        radiusSeekBar.setMax(100);
+        radiusSeekBar.setProgress(100);
+        radiusValue.setText("Within 100 km");
         if (getArguments() != null) {
             latitude = getArguments().getDouble("LATITUDE", latitude);
             longitude = getArguments().getDouble("LONGITUDE", longitude);
-            int savedRadius = getArguments().getInt("RADIUS", sharedPreferences.getInt("RADIUS", 100));
-            radiusSeekBar.setProgress(savedRadius);
-            radiusValue.setText("Within " + savedRadius + " km");
+//            int savedRadius = getArguments().getInt("RADIUS", sharedPreferences.getInt("RADIUS", 1000));
+//            radiusSeekBar.setProgress(savedRadius);
+//            radiusValue.setText("Within " + savedRadius + " km");
+            radiusSeekBar.setProgress(100);
+            radiusValue.setText("Within 100 km");
         } else {
-            int savedRadius = sharedPreferences.getInt("RADIUS", 100);
-            radiusSeekBar.setProgress(savedRadius);
-            radiusValue.setText("Within " + savedRadius + " km");
+//            int savedRadius = sharedPreferences.getInt("RADIUS", 1000);
+//            radiusSeekBar.setProgress(savedRadius);
+//            radiusValue.setText("Within " + savedRadius + " km");
+            radiusSeekBar.setProgress(100);
+            radiusValue.setText("Within 100 km");
         }
         radiusSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress < 1) progress = 1;
                 radiusValue.setText("Within " + progress + " km");
             }
 
@@ -114,14 +125,18 @@ public class filters extends Fragment {
             public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Save the new radius value
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("RADIUS", seekBar.getProgress());
+                editor.apply();
+            }
         });
 
         // Apply filters button
         Button btnApplyFilters = rootView.findViewById(R.id.btnApply);
         btnApplyFilters.setOnClickListener(v -> {
             // Update SharedPreferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putFloat("LATITUDE", (float) latitude);
             editor.putFloat("LONGITUDE", (float) longitude);
             editor.putInt("RADIUS", radiusSeekBar.getProgress());

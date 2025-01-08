@@ -90,9 +90,9 @@
             app:layout_constraintTop_toBottomOf="@id/TVWithinKM"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:max="30"
+            android:max="100"
             android:min="1"
-            android:progress="10"
+            android:progress="100"
             android:progressTint="@color/brown"
             android:thumbTint="@color/brown"/>
 

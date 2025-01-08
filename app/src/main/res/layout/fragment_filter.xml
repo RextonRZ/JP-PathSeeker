@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="#000000"
-    tools:context=".filter">
+    tools:context=".filters">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
