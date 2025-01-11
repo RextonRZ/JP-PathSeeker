@@ -72,10 +72,10 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_job_search, container, false);
 
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Location", MODE_PRIVATE);
-        lat = sharedPreferences.getFloat("LATITUDE", 0f);
-        lng = sharedPreferences.getFloat("LONGITUDE", 0f);
-        radius = sharedPreferences.getInt("RADIUS", 100);
+//        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("Location", MODE_PRIVATE);
+//        lat = sharedPreferences.getFloat("LATITUDE", 0f);
+//        lng = sharedPreferences.getFloat("LONGITUDE", 0f);
+//        radius = sharedPreferences.getInt("RADIUS", 100);
         userEmail = UserSessionManager.getInstance().getUserEmail();
         username = userEmail.replace(".", "_");
 
@@ -127,7 +127,7 @@ public class jobSearch extends Fragment implements job_RecyclerViewAdapter.OnBoo
             selectedRemoteOptions.clear();
             selectedExperienceLevels.clear();
             selectedJobCategory.clear();
-            radius = 100;
+            radius = 1000;
 
             EditText etUserInput = view.findViewById(R.id.ETsearch);
             etUserInput.setText("");
