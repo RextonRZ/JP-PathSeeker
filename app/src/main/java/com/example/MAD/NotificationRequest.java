@@ -26,6 +26,7 @@ import java.util.List;
 public class NotificationRequest extends Fragment {
 
     private DatabaseReference ref;
+    private ValueEventListener valueEventListener;
 
     private RecyclerView recyclerView;
     private ApplicationAdapter adapter;
@@ -65,24 +66,31 @@ public class NotificationRequest extends Fragment {
     private void fetchApplicants() {
         ref = FirebaseDatabase.getInstance().getReference("applications/jobs");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {  // Changed to addValueEventListener to listen for real-time updates
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 applicationList.clear();  // Clear the existing list
 
                 if (snapshot.exists()) {
                     for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
-                        Application application = new Application();
                         String jobId = jobSnapshot.getKey();
-                        application.setJobId(jobId);
 
                         // Iterate through users under a specific job
                         for (DataSnapshot userSnapshot : jobSnapshot.getChildren()) {
+                            // First check the status - if it's Success or Rejected, skip this application
+                            String status = userSnapshot.child("status").getValue(String.class);
+                            if ("Success".equals(status) || "Rejected".equals(status)) {
+                                continue;  // Skip this application
+                            }
+
+                            Application application = new Application();
+                            application.setJobId(jobId);
+
                             // Extract userId from userSnapshot
-                            String userId = userSnapshot.getKey();  // The userId is the key in userSnapshot
+                            String userId = userSnapshot.getKey();
                             application.setUserId(userId);
 
-                            // Extract other fields as necessary
+                            // Extract other fields
                             String name = userSnapshot.child("name").getValue(String.class);
                             application.setApplicantName(name);
 
@@ -95,18 +103,23 @@ public class NotificationRequest extends Fragment {
                             String jobTitle = userSnapshot.child("title").getValue(String.class);
                             application.setPosition(jobTitle);
 
-                            ArrayList<String> jobTypeList = userSnapshot.child("jobType").getValue(new GenericTypeIndicator<ArrayList<String>>() {});
+                            ArrayList<String> jobTypeList = userSnapshot.child("jobType")
+                                    .getValue(new GenericTypeIndicator<ArrayList<String>>() {});
                             application.setJobTypeList(jobTypeList);
 
-                            String status = userSnapshot.child("status").getValue(String.class);
                             application.setStatus(status);
 
-                            // Filter out applications that have been accepted or rejected
-                            if (!"Success".equals(status) && !"Rejected".equals(status)) {
+                            // Add to list only if all required data is present
+                            if (name != null && jobTitle != null) {
                                 applicationList.add(application);
                             }
                         }
                     }
+
+                    if (applicationList.isEmpty()) {
+                        Toast.makeText(getActivity(), "No pending applications found", Toast.LENGTH_SHORT).show();
+                    }
+
                     adapter.setApplicationList(applicationList);
                 } else {
                     Toast.makeText(getActivity(), "No applications found", Toast.LENGTH_SHORT).show();
@@ -116,7 +129,17 @@ public class NotificationRequest extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Error fetching applicants: " + error.getMessage());
+                Toast.makeText(getActivity(), "Error loading applications: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (ref != null && valueEventListener != null) {
+            ref.removeEventListener(valueEventListener);  // Remove the listener when fragment is destroyed
+        }
     }
 }
