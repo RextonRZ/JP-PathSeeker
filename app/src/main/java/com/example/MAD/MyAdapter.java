@@ -29,10 +29,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         this.mentors = mentors;
     }
 
-    public void setFilteredList(List<String> filteredTitles, List<Integer> filteredImages, List<String> filteredDescriptions) {
+    public void setFilteredList(List<String> filteredTitles, List<Integer> filteredImages,
+                                List<String> filteredDescriptions, List<Mentor> filteredMentors) {
         this.titles = filteredTitles;
         this.images = filteredImages;
         this.descriptions = filteredDescriptions;
+        this.mentors = filteredMentors;  // Add this
         notifyDataSetChanged();
     }
 

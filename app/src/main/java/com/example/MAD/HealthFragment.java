@@ -163,13 +163,13 @@ public class HealthFragment extends Fragment {
 
     private void filterList(String text) {
         if (titles.isEmpty()) {
-            // Don't show "No data found" toast if we're still loading data
             return;
         }
 
         List<String> filteredTitles = new ArrayList<>();
         List<Integer> filteredImages = new ArrayList<>();
         List<String> filteredDescriptions = new ArrayList<>();
+        List<Mentor> filteredExperts = new ArrayList<>();  // Add this
 
         String lowerCaseText = text.toLowerCase();
 
@@ -181,15 +181,15 @@ public class HealthFragment extends Fragment {
                 filteredTitles.add(titles.get(i));
                 filteredImages.add(mImages.get(i));
                 filteredDescriptions.add(descriptions.get(i));
+                filteredExperts.add(expertsList.get(i));  // Add this
             }
         }
 
         if (filteredTitles.isEmpty() && !text.isEmpty()) {
-            // Only show "No data found" toast if we have data but no matches
             Toast.makeText(requireContext(), "No data found", Toast.LENGTH_SHORT).show();
         }
 
-        adapter.setFilteredList(filteredTitles, filteredImages, filteredDescriptions);
+        adapter.setFilteredList(filteredTitles, filteredImages, filteredDescriptions, filteredExperts);  // Update this
     }
 
     @Override

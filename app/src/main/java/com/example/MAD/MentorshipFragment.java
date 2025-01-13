@@ -143,13 +143,13 @@ public class MentorshipFragment extends Fragment {
 
     private void filterList(String text) {
         if (titles.isEmpty()) {
-            // Don't show "No data found" toast if we're still loading data
             return;
         }
 
         List<String> filteredTitles = new ArrayList<>();
         List<Integer> filteredImages = new ArrayList<>();
         List<String> filteredDescriptions = new ArrayList<>();
+        List<Mentor> filteredMentors = new ArrayList<>();  // Add this
 
         String lowerCaseText = text.toLowerCase();
 
@@ -161,15 +161,15 @@ public class MentorshipFragment extends Fragment {
                 filteredTitles.add(titles.get(i));
                 filteredImages.add(mImages.get(i));
                 filteredDescriptions.add(descriptions.get(i));
+                filteredMentors.add(mentorsList.get(i));  // Add this
             }
         }
 
         if (filteredTitles.isEmpty() && !text.isEmpty()) {
-            // Only show "No data found" toast if we have data but no matches
             Toast.makeText(requireContext(), "No data found", Toast.LENGTH_SHORT).show();
         }
 
-        adapter.setFilteredList(filteredTitles, filteredImages, filteredDescriptions);
+        adapter.setFilteredList(filteredTitles, filteredImages, filteredDescriptions, filteredMentors);  // Update this
     }
 
     private int getValidImageResourceId(String resourceName) {
